@@ -293,378 +293,77 @@
         </div>
     </div>
 
-    <script>
-        // Configuration - Replace with your actual API endpoints
-        const CONFIG = {
-            API_BASE_URL: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f22ee6457eb84ca3a32e3f970a3150be/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sCEtdfiLOS_Ull_JD6DG12B23XJinjCk77mXDy8qUIA',
-            API_KEY: '',
-            COMPANY_NAME: 'Your Company Name'
-        };
+<script>
+    // Configuration
+    const CONFIG = {
+        API_BASE_URL: 'https://prod-15.westus.logic.azure.com:443/workflows/f22ee6457eb84ca3a32e3f970a3150be/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sCEtdfiLOS_Ull_JD6DG12B23XJinjCk77mXDy8qUIA'
+    };
 
-        // Work email validation
-        const GENERIC_DOMAINS = [
-            'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
-            'aol.com', 'icloud.com', 'live.com', 'msn.com',
-            'comcast.net', 'verizon.net', 'att.net', 'cox.net',
-            'protonmail.com', 'mail.com', 'yandex.com'
-        ];
+    // Work email validation
+    const GENERIC_DOMAINS = [
+        'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
+        'aol.com', 'icloud.com', 'live.com', 'msn.com',
+        'comcast.net', 'verizon.net', 'att.net', 'cox.net',
+        'protonmail.com', 'mail.com', 'yandex.com'
+    ];
 
-        // Global variables
-        let agreementData = {};
-        let agreementId = '';
-        let securityToken = '';
+    // Global variables
+    let agreementId = '';
+    let securityToken = '';
+    let pdfUrl = '';
 
-        // Initialize form when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeForm();
-            setupValidation();
-            setupFormSubmission();
+    // Initialize form when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeForm();
+        setupValidation();
+        setupFormSubmission();
+    });
+
+    // Initialize form with URL parameters
+    function initializeForm() {
+        const urlParams = new URLSearchParams(window.location.search);
+        agreementId = urlParams.get('id') || '';
+        securityToken = urlParams.get('token') || '';
+        pdfUrl = urlParams.get('pdfUrl') || '';
+        
+        // Display agreement ID
+        if (agreementId) {
+            document.getElementById('agreement-id-display').textContent = agreementId;
+        } else {
+            document.getElementById('agreement-id-display').textContent = 'Invalid Access';
+            showInvalidAccessError();
+        }
+    }
+
+    // Show invalid access error
+    function showInvalidAccessError() {
+        document.getElementById('form-container').innerHTML = `
+            <div style="text-align: center; padding: 40px; background-color: #ffebee; border-radius: 8px; margin-top: 20px;">
+                <h2 style="color: #d32f2f; margin-bottom: 15px;">Invalid Access</h2>
+                <p style="color: #666; margin-bottom: 15px;">
+                    This agreement link is invalid or has expired.
+                </p>
+                <p style="color: #666; font-size: 14px;">
+                    Please contact the person who sent you this link.
+                </p>
+            </div>
+        `;
+    }
+
+    // Setup form validation
+    function setupValidation() {
+        // Real-time email validation
+        document.getElementById('work-email').addEventListener('blur', function() {
+            validateWorkEmail(this.value, 'work-email');
         });
 
-        // Initialize form with URL parameters
-        function initializeForm() {
-            // Extract agreement ID and token from URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            agreementId = urlParams.get('id') || urlParams.get('agreement');
-            securityToken = urlParams.get('token');
-            
-            // Validate both agreement ID and token are present
-            if (!agreementId || !securityToken) {
-                showInvalidAccessError();
-                return;
-            }
+        // Digital signature validation
+        document.getElementById('digital-signature').addEventListener('input', function() {
+            validateDigitalSignature();
+        });
+    }
 
-            // Validate agreement ID format
-            if (!/^AGR-\d{4}-\d{4}-[A-Z0-9]{4}$/.test(agreementId)) {
-                showInvalidAccessError();
-                return;
-            }
-
-            // Validate token format (32-character alphanumeric)
-            if (!/^[A-Za-z0-9]{32}$/.test(securityToken)) {
-                showInvalidAccessError();
-                return;
-            }
-
-            // Display agreement ID
-            document.getElementById('agreement-id-display').textContent = agreementId;
-            
-            // Load agreement data with token validation
-            loadAgreementData(agreementId, securityToken);
-        }
-
-        // Load pre-filled agreement data with token validation
-        async function loadAgreementData(id, token) {
-            try {
-                // Call your API to validate token and get pre-filled data
-                const response = await fetch(`${CONFIG.API_BASE_URL}/get-agreement-data`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${CONFIG.API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        agreementId: id,
-                        token: token
-                    })
-                });
-
-                if (response.ok) {
-                    agreementData = await response.json();
-                    populateForm(agreementData);
-                } else if (response.status === 401 || response.status === 403) {
-                    // Invalid token or expired link
-                    showInvalidAccessError();
-                } else {
-                    throw new Error('Failed to load agreement data');
-                }
-            } catch (error) {
-                console.error('Error loading agreement data:', error);
-                showInvalidAccessError();
-            }
-        }
-
-        // Show invalid access error (generic message for security)
-        function showInvalidAccessError() {
-            document.getElementById('form-container').innerHTML = `
-                <div style="text-align: center; padding: 40px; background-color: #ffebee; border-radius: 8px; margin-top: 20px;">
-                    <h2 style="color: #d32f2f; margin-bottom: 15px;">Access Not Available</h2>
-                    <p style="color: #666; margin-bottom: 15px;">
-                        This agreement completion link is not valid or has expired.
-                    </p>
-                    <p style="color: #666; font-size: 14px;">
-                        If you believe this is an error, please contact the person who sent you this link.
-                    </p>
-                </div>
-            `;
-            
-            // Hide other page elements
-            document.getElementById('agreement-id-display').textContent = 'Invalid Access';
-        }
-
-        // Populate form with pre-filled data
-        function populateForm(data) {
-            // Pre-fill company name if available
-            if (data.companyName) {
-                document.getElementById('company-name').value = data.companyName;
-            }
-
-            // Add dynamic fields based on agreement type
-            if (data.agreementType) {
-                addDynamicFields(data.agreementType, data.dynamicFields || {});
-            }
-        }
-
-        // Add agreement-specific dynamic fields
-        function addDynamicFields(agreementType, fieldData) {
-            const container = document.getElementById('dynamic-fields');
-            
-            switch (agreementType) {
-                case 'Service Agreement':
-                    container.innerHTML = `
-                        <div class="form-group">
-                            <label for="service-rate">Hourly Rate (USD)</label>
-                            <input type="number" id="service-rate" name="serviceRate" 
-                                   class="form-control" min="0" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label for="service-description">Service Description</label>
-                            <textarea id="service-description" name="serviceDescription" 
-                                     class="form-control" rows="3"></textarea>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'NDA':
-                    container.innerHTML = `
-                        <div class="form-group">
-                            <label for="confidentiality-duration">Confidentiality Period (Years)</label>
-                            <select id="confidentiality-duration" name="confidentialityDuration" class="form-control">
-                                <option value="2">2 Years</option>
-                                <option value="3" selected>3 Years</option>
-                                <option value="5">5 Years</option>
-                                <option value="indefinite">Indefinite</option>
-                            </select>
-                        </div>
-                    `;
-                    break;
-                    
-                default:
-                    container.innerHTML = '<p>Standard agreement terms apply.</p>';
-            }
-        }
-
-        // Setup form validation
-        function setupValidation() {
-            // Real-time email validation
-            document.getElementById('work-email').addEventListener('blur', function() {
-                validateWorkEmail(this.value, 'work-email');
-            });
-
-            // Digital signature validation
-            document.getElementById('digital-signature').addEventListener('input', function() {
-                validateDigitalSignature();
-            });
-        }
-
-        // Validate work email domain
-        function validateWorkEmail(email, fieldId) {
-            const field = document.getElementById(fieldId);
-            const errorDiv = document.getElementById(fieldId + '-error');
-            
-            if (!email) {
-                return false;
-            }
-
-            // Basic email format check
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showFieldError(field, errorDiv, 'Please enter a valid email address.');
-                return false;
-            }
-
-            // Check for generic domains
-            const domain = email.split('@')[1].toLowerCase();
-            if (GENERIC_DOMAINS.includes(domain)) {
-                showFieldError(field, errorDiv, 'Please use your work email address. Generic email providers are not accepted.');
-                return false;
-            }
-
-            // Check for temporary email patterns
-            if (domain.includes('tempmail') || domain.includes('disposable')) {
-                showFieldError(field, errorDiv, 'Temporary email addresses are not permitted.');
-                return false;
-            }
-
-            clearFieldError(field, errorDiv);
-            return true;
-        }
-
-        // Validate digital signature matches signatory name
-        function validateDigitalSignature() {
-            const signatoryName = document.getElementById('signatory-name').value;
-            const digitalSignature = document.getElementById('digital-signature').value;
-            const field = document.getElementById('digital-signature');
-            const errorDiv = document.getElementById('digital-signature-error');
-
-            if (signatoryName && digitalSignature && signatoryName.toLowerCase() !== digitalSignature.toLowerCase()) {
-                showFieldError(field, errorDiv, 'Digital signature must match the signatory name exactly.');
-                return false;
-            }
-
-            clearFieldError(field, errorDiv);
-            return true;
-        }
-
-        // Show field error
-        function showFieldError(field, errorDiv, message) {
-            field.classList.add('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        // Clear field error
-        function clearFieldError(field, errorDiv) {
-            field.classList.remove('error');
-            errorDiv.style.display = 'none';
-        }
-
-        // Setup form submission
-        function setupFormSubmission() {
-            document.getElementById('agreement-completion-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                if (await validateAndSubmitForm()) {
-                    // Form submitted successfully
-                } else {
-                    // Validation failed
-                    alert('Please correct the errors above and try again.');
-                }
-            });
-        }
-
-        // Validate and submit form
-        async function validateAndSubmitForm() {
-            // Validate all required fields
-            const isValid = validateAllFields();
-            
-            if (!isValid) {
-                return false;
-            }
-
-            // Show loading indicator
-            document.getElementById('form-container').style.display = 'none';
-            document.getElementById('loading-indicator').style.display = 'block';
-
-            try {
-                // Collect form data
-                const formData = collectFormData();
-                
-                // Submit to API
-                const response = await submitAgreement(formData);
-                
-                if (response.success) {
-                    showCompletionSuccess(response.data);
-                    return true;
-                } else {
-                    throw new Error(response.error || 'Submission failed');
-                }
-            } catch (error) {
-                console.error('Submission error:', error);
-                alert('Failed to submit agreement. Please try again or contact support.');
-                
-                // Hide loading and show form again
-                document.getElementById('loading-indicator').style.display = 'none';
-                document.getElementById('form-container').style.display = 'block';
-                
-                return false;
-            }
-        }
-
-        // Validate all form fields
-        function validateAllFields() {
-            let isValid = true;
-            
-            // Validate work email
-            const workEmail = document.getElementById('work-email').value;
-            if (!validateWorkEmail(workEmail, 'work-email')) {
-                isValid = false;
-            }
-            
-            // Validate digital signature
-            if (!validateDigitalSignature()) {
-                isValid = false;
-            }
-            
-            // Validate terms agreement
-            if (!document.getElementById('terms-agreement').checked) {
-                alert('You must agree to the terms and conditions.');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-
-        // Collect form data
-        function collectFormData() {
-            const form = document.getElementById('agreement-completion-form');
-            const formData = new FormData(form);
-            
-            const data = {
-                agreementId: agreementId,
-                securityToken: securityToken,
-                companyName: formData.get('companyName'),
-                companyType: formData.get('companyType'),
-                businessAddress: formData.get('businessAddress'),
-                signatoryName: formData.get('signatoryName'),
-                signatoryTitle: formData.get('signatoryTitle'),
-                workEmail: formData.get('workEmail'),
-                phoneNumber: formData.get('phoneNumber'),
-                digitalSignature: formData.get('digitalSignature'),
-                termsAgreement: formData.get('termsAgreement') ? true : false,
-                completionTimestamp: new Date().toISOString(),
-                ipAddress: '', // Will be captured server-side
-                userAgent: navigator.userAgent
-            };
-
-            // Add dynamic fields based on agreement type
-            if (document.getElementById('service-rate')) {
-                data.serviceRate = formData.get('serviceRate');
-                data.serviceDescription = formData.get('serviceDescription');
-            }
-            
-            if (document.getElementById('confidentiality-duration')) {
-                data.confidentialityDuration = formData.get('confidentialityDuration');
-            }
-
-            return data;
-        }
-
-        // Submit agreement to API
-        async function submitAgreement(formData) {
-            const response = await fetch(`${CONFIG.API_BASE_URL}/complete-agreement`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${CONFIG.API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            return await response.json();
-        }
-
-        // Show completion success
-        function showCompletionSuccess(responseData) {
-            document.getElementById('loading-indicator').style.display = 'none';
-            document.getElementById('completed-agreement-id').textContent = agreementId;
-            
-            if (responseData.pdfUrl) {
-                document.getElementById('pdf-download-link').href = responseData.pdfUrl;
-            }
-            
-            document.getElementById('completion-success').style.display = 'block';
-        }
-    </script>
+    // Validate work email domain
+    func
 </body>
 </html>
