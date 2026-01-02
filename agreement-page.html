@@ -524,8 +524,34 @@ function initializeForm() {
         document.getElementById('agreement-id-display').textContent = 'Invalid Access';
     }
 
-    // Populate form with pre-filled data
-    function populateForm(data) {
+// Populate form with pre-filled data
+function populateForm(data) {
+    // Get URL parameters for pre-fill
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Pre-fill company name
+    const companyName = urlParams.get('companyName') || data.companyName;
+    if (companyName) {
+        document.getElementById('company-name').value = decodeURIComponent(companyName);
+    }
+    
+    // Pre-fill signatory name
+    const contactName = urlParams.get('contactName') || data.contactName;
+    if (contactName) {
+        document.getElementById('signatory-name').value = decodeURIComponent(contactName);
+    }
+    
+    // Pre-fill work email
+    const contactEmail = urlParams.get('contactEmail') || data.contactEmail;
+    if (contactEmail) {
+        document.getElementById('work-email').value = decodeURIComponent(contactEmail);
+    }
+
+    // Add dynamic fields based on agreement type
+    if (data.agreementType) {
+        addDynamicFields(data.agreementType, data.dynamicFields || {});
+    }
+}
         // Pre-fill company name if available
         if (data.companyName) {
             document.getElementById('company-name').value = data.companyName;
