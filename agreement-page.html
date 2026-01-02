@@ -349,6 +349,8 @@
         initializeForm();
         setupValidation();
         setupFormSubmission();
+        prefillFormFields();
+});
     });
 
 
@@ -804,6 +806,52 @@ function populateForm(data) {
         // Scroll to success message
         document.getElementById('completion-success').scrollIntoView({ behavior: 'smooth' });
     }
+
+
+    // Add this function anywhere in your script section
+function prefillFormFields() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Get pre-fill values from URL
+    const prefilledCompanyName = urlParams.get('companyName');
+    const prefilledContactName = urlParams.get('contactName');
+    const prefilledContactEmail = urlParams.get('contactEmail');
+    
+    console.log('Pre-fill data:', {
+        companyName: prefilledCompanyName,
+        contactName: prefilledContactName,
+        contactEmail: prefilledContactEmail
+    });
+    
+    // Pre-fill company name
+    if (prefilledCompanyName) {
+        const companyField = document.getElementById('company-name');
+        if (companyField) {
+            companyField.value = decodeURIComponent(prefilledCompanyName);
+            console.log('Filled company name:', companyField.value);
+        }
+    }
+    
+    // Pre-fill signatory name
+    if (prefilledContactName) {
+        const signatoryField = document.getElementById('signatory-name');
+        if (signatoryField) {
+            signatoryField.value = decodeURIComponent(prefilledContactName);
+            console.log('Filled signatory name:', signatoryField.value);
+        }
+    }
+    
+    // Pre-fill work email
+    if (prefilledContactEmail) {
+        const emailField = document.getElementById('work-email');
+        if (emailField) {
+            emailField.value = decodeURIComponent(prefilledContactEmail);
+            console.log('Filled email:', emailField.value);
+        }
+    }
+}
+
+
 </script>
 </body>
 </html>
