@@ -323,7 +323,7 @@
 </div>
 
 <script>
-    // Configuration - Replace with your actual API endpoints
+    // Configuration
     const CONFIG = {
         API_BASE_URL: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f22ee6457eb84ca3a32e3f970a3150be/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sCEtdfiLOS_Ull_JD6DG12B23XJinjCk77mXDy8qUIA',
         API_KEY: '',
@@ -349,49 +349,92 @@
         initializeForm();
         setupValidation();
         setupFormSubmission();
-        prefillFormFields();
-});
     });
 
+    // Initialize form with URL parameters
+    function initializeForm() {
+        // Extract agreement ID and token from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        agreementId = urlParams.get('id') || urlParams.get('agreement');
+        securityToken = urlParams.get('token');
+        agreementType = urlParams.get('type') || 'NDA';
+        
+        // Validate both agreement ID and token are present
+        if (!agreementId || !securityToken) {
+            showInvalidAccessError();
+            return;
+        }
 
-// Initialize form with URL parameters
-function initializeForm() {
-    // Extract agreement ID and token from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    agreementId = urlParams.get('id') || urlParams.get('agreement');
-    securityToken = urlParams.get('token');
-    agreementType = urlParams.get('type') || 'NDA';
-    
-    // Validate both agreement ID and token are present
-    if (!agreementId || !securityToken) {
-        showInvalidAccessError();
-        return;
+        // Validate agreement ID format
+        if (!/^[A-Z]+-\d{4}-\d{4}-[A-Z0-9]{4}$/.test(agreementId)) {
+            showInvalidAccessError();
+            return;
+        }
+
+        // Validate token format
+        const isValidGUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(securityToken);
+        const isValid32Char = /^[A-Za-z0-9]{32}$/.test(securityToken);
+        
+        if (!isValidGUID && !isValid32Char) {
+            showInvalidAccessError();
+            return;
+        }
+
+        // Display agreement ID
+        document.getElementById('agreement-id-display').textContent = agreementId;
+        
+        // Load agreement text based on type
+        loadAgreementText(agreementType);
+        
+        // Pre-fill form fields from URL
+        prefillFormFields();
     }
 
-    // Validate agreement ID format (flexible for NDA-, AGR-, etc.)
-    if (!/^[A-Z]+-\d{4}-\d{4}-[A-Z0-9]{4}$/.test(agreementId)) {
-        showInvalidAccessError();
-        return;
-    }
+    // Pre-fill form fields from URL parameters
+    function prefillFormFields() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Get pre-fill values from URL
+        const prefilledCompanyName = urlParams.get('companyName');
+        const prefilledContactName = urlParams.get('contactName');
+        const prefilledContactEmail = urlParams.get('contactEmail');
+        
+        console.log('Pre-fill data:', {
+            companyName: prefilledCompanyName,
+            contactName: prefilledContactName,
+            contactEmail: prefilledContactEmail
+        });
+        
+        // Pre-fill company name
+        if (prefilledCompanyName) {
+            const companyField = document.getElementById('company-name');
+            if (companyField) {
+                companyField.value = decodeURIComponent(prefilledCompanyName);
+                console.log('Filled company name:', companyField.value);
+            }
+        }
+        
+        // Pre-fill signatory name
+        if (prefilledContactName) {
+            const signatoryField = document.getElementById('signatory-name');
+            if (signatoryField) {
+                signatoryField.value = decodeURIComponent(prefilledContactName);
+                console.log('Filled signatory name:', signatoryField.value);
+            }
+        }
+        
+        // Pre-fill work email
+        if (prefilledContactEmail) {
+            const emailField = document.getElementById('work-email');
+            if (emailField) {
+                emailField.value = decodeURIComponent(prefilledContactEmail);
+                console.log('Filled email:', emailField.value);
+            }
+        }
 
-    // Validate token format (GUID with hyphens OR 32-char alphanumeric)
-    const isValidGUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(securityToken);
-    const isValid32Char = /^[A-Za-z0-9]{32}$/.test(securityToken);
-    
-    if (!isValidGUID && !isValid32Char) {
-        showInvalidAccessError();
-        return;
+        // Add dynamic fields based on agreement type
+        addDynamicFields(agreementType, {});
     }
-
-    // Display agreement ID
-    document.getElementById('agreement-id-display').textContent = agreementId;
-    
-    // Load agreement text based on type
-    loadAgreementText(agreementType);
-    
-    // Load agreement data with token validation
-    loadAgreementData(agreementId, securityToken);
-}
 
     // Load agreement text based on type
     function loadAgreementText(type) {
@@ -496,19 +539,7 @@ function initializeForm() {
         }
     }
 
-    // Load pre-filled agreement data with token validation
-    async function loadAgreementData(id, token) {
-        try {
-            // For now, just populate the form with agreement type
-            // In production, you'd call your API to validate token and get pre-filled data
-            populateForm({ agreementType: agreementType });
-        } catch (error) {
-            console.error('Error loading agreement data:', error);
-            showInvalidAccessError();
-        }
-    }
-
-    // Show invalid access error (generic message for security)
+    // Show invalid access error
     function showInvalidAccessError() {
         document.getElementById('form-container').innerHTML = `
             <div style="text-align: center; padding: 40px; background-color: #ffebee; border-radius: 8px; margin-top: 20px;">
@@ -522,47 +553,7 @@ function initializeForm() {
             </div>
         `;
         
-        // Hide other page elements
         document.getElementById('agreement-id-display').textContent = 'Invalid Access';
-    }
-
-// Populate form with pre-filled data
-function populateForm(data) {
-    // Get URL parameters for pre-fill
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Pre-fill company name
-    const companyName = urlParams.get('companyName') || data.companyName;
-    if (companyName) {
-        document.getElementById('company-name').value = decodeURIComponent(companyName);
-    }
-    
-    // Pre-fill signatory name
-    const contactName = urlParams.get('contactName') || data.contactName;
-    if (contactName) {
-        document.getElementById('signatory-name').value = decodeURIComponent(contactName);
-    }
-    
-    // Pre-fill work email
-    const contactEmail = urlParams.get('contactEmail') || data.contactEmail;
-    if (contactEmail) {
-        document.getElementById('work-email').value = decodeURIComponent(contactEmail);
-    }
-
-    // Add dynamic fields based on agreement type
-    if (data.agreementType) {
-        addDynamicFields(data.agreementType, data.dynamicFields || {});
-    }
-}
-        // Pre-fill company name if available
-        if (data.companyName) {
-            document.getElementById('company-name').value = data.companyName;
-        }
-
-        // Add dynamic fields based on agreement type
-        if (data.agreementType) {
-            addDynamicFields(data.agreementType, data.dynamicFields || {});
-        }
     }
 
     // Add agreement-specific dynamic fields
@@ -766,7 +757,7 @@ function populateForm(data) {
             digitalSignature: formData.get('digitalSignature'),
             termsAgreement: formData.get('termsAgreement') ? true : false,
             completionTimestamp: new Date().toISOString(),
-            ipAddress: '', // Will be captured server-side
+            ipAddress: '',
             userAgent: navigator.userAgent
         };
 
@@ -806,52 +797,6 @@ function populateForm(data) {
         // Scroll to success message
         document.getElementById('completion-success').scrollIntoView({ behavior: 'smooth' });
     }
-
-
-    // Add this function anywhere in your script section
-function prefillFormFields() {
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Get pre-fill values from URL
-    const prefilledCompanyName = urlParams.get('companyName');
-    const prefilledContactName = urlParams.get('contactName');
-    const prefilledContactEmail = urlParams.get('contactEmail');
-    
-    console.log('Pre-fill data:', {
-        companyName: prefilledCompanyName,
-        contactName: prefilledContactName,
-        contactEmail: prefilledContactEmail
-    });
-    
-    // Pre-fill company name
-    if (prefilledCompanyName) {
-        const companyField = document.getElementById('company-name');
-        if (companyField) {
-            companyField.value = decodeURIComponent(prefilledCompanyName);
-            console.log('Filled company name:', companyField.value);
-        }
-    }
-    
-    // Pre-fill signatory name
-    if (prefilledContactName) {
-        const signatoryField = document.getElementById('signatory-name');
-        if (signatoryField) {
-            signatoryField.value = decodeURIComponent(prefilledContactName);
-            console.log('Filled signatory name:', signatoryField.value);
-        }
-    }
-    
-    // Pre-fill work email
-    if (prefilledContactEmail) {
-        const emailField = document.getElementById('work-email');
-        if (emailField) {
-            emailField.value = decodeURIComponent(prefilledContactEmail);
-            console.log('Filled email:', emailField.value);
-        }
-    }
-}
-
-
 </script>
 </body>
 </html>
