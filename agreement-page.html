@@ -397,50 +397,85 @@ Continue Intake Process
     }
 
     // Pre-fill form fields from URL parameters
-    function prefillFormFields() {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Get pre-fill values from URL
-        const prefilledCompanyName = urlParams.get('companyName');
-        const prefilledContactName = urlParams.get('contactName');
-        const prefilledContactEmail = urlParams.get('contactEmail');
-        
-        console.log('Pre-fill data:', {
-            companyName: prefilledCompanyName,
-            contactName: prefilledContactName,
-            contactEmail: prefilledContactEmail
-        });
-        
-        // Pre-fill company name
-        if (prefilledCompanyName) {
-            const companyField = document.getElementById('company-name');
-            if (companyField) {
-                companyField.value = decodeURIComponent(prefilledCompanyName);
-                console.log('Filled company name:', companyField.value);
-            }
+    // Pre-fill form fields from URL parameters
+function prefillFormFields() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Get all pre-fill values from URL
+    const prefilledCompanyName = urlParams.get('companyName');
+    const prefilledContactName = urlParams.get('contactName');
+    const prefilledContactEmail = urlParams.get('contactEmail');
+    const prefilledBusinessAddress = urlParams.get('businessAddress');
+    const prefilledSignatoryTitle = urlParams.get('signatoryTitle');
+    const prefilledPhoneNumber = urlParams.get('phoneNumber');
+    
+    console.log('Pre-fill data:', {
+        companyName: prefilledCompanyName,
+        contactName: prefilledContactName,
+        contactEmail: prefilledContactEmail,
+        businessAddress: prefilledBusinessAddress,
+        signatoryTitle: prefilledSignatoryTitle,
+        phoneNumber: prefilledPhoneNumber
+    });
+    
+    // Pre-fill company name
+    if (prefilledCompanyName) {
+        const companyField = document.getElementById('company-name');
+        if (companyField) {
+            companyField.value = decodeURIComponent(prefilledCompanyName);
+            console.log('Filled company name:', companyField.value);
         }
-        
-        // Pre-fill signatory name
-        if (prefilledContactName) {
-            const signatoryField = document.getElementById('signatory-name');
-            if (signatoryField) {
-                signatoryField.value = decodeURIComponent(prefilledContactName);
-                console.log('Filled signatory name:', signatoryField.value);
-            }
-        }
-        
-        // Pre-fill work email
-        if (prefilledContactEmail) {
-            const emailField = document.getElementById('work-email');
-            if (emailField) {
-                emailField.value = decodeURIComponent(prefilledContactEmail);
-                console.log('Filled email:', emailField.value);
-            }
-        }
-
-        // Add dynamic fields based on agreement type
-        addDynamicFields(agreementType, {});
     }
+    
+    // Pre-fill business address
+    if (prefilledBusinessAddress) {
+        const addressField = document.getElementById('business-address');
+        if (addressField) {
+            addressField.value = decodeURIComponent(prefilledBusinessAddress);
+            console.log('Filled business address:', addressField.value);
+        }
+    }
+    
+    // Pre-fill signatory name
+    if (prefilledContactName) {
+        const signatoryField = document.getElementById('signatory-name');
+        if (signatoryField) {
+            signatoryField.value = decodeURIComponent(prefilledContactName);
+            console.log('Filled signatory name:', signatoryField.value);
+        }
+    }
+    
+    // Pre-fill signatory title
+    if (prefilledSignatoryTitle) {
+        const titleField = document.getElementById('signatory-title');
+        if (titleField) {
+            titleField.value = decodeURIComponent(prefilledSignatoryTitle);
+            console.log('Filled signatory title:', titleField.value);
+        }
+    }
+    
+    // Pre-fill work email
+    if (prefilledContactEmail) {
+        const emailField = document.getElementById('work-email');
+        if (emailField) {
+            emailField.value = decodeURIComponent(prefilledContactEmail);
+            console.log('Filled email:', emailField.value);
+        }
+    }
+    
+    // Pre-fill phone number
+    if (prefilledPhoneNumber) {
+        const phoneField = document.getElementById('phone-number');
+        if (phoneField) {
+            phoneField.value = decodeURIComponent(prefilledPhoneNumber);
+            console.log('Filled phone number:', phoneField.value);
+        }
+    }
+
+    // Add dynamic fields based on agreement type
+    addDynamicFields(agreementType, {});
+}
+
 
     // Load agreement text based on type
     function loadAgreementText(type) {
