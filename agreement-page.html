@@ -478,24 +478,24 @@ function prefillFormFields() {
 
 
     // Load agreement text based on type
-    function loadAgreementText(type) {
-        const container = document.getElementById('agreement-text');
-        
-        switch(type) {
-            case 'NDA':
-            case 'Mutual NDA':
-                container.innerHTML = getNDAContent();
-                break;
-            case 'Company Hub Agreement':
-                container.innerHTML = getPlaceholderContent('Company Hub Agreement');
-                break;
-            case 'Employee Hub Agreement':
-                container.innerHTML = getPlaceholderContent('Employee Hub Agreement');
-                break;
-            default:
-                container.innerHTML = getPlaceholderContent('Agreement');
-        }
+function loadAgreementText(type) {
+    const container = document.getElementById('agreement-text');
+    
+    switch(type) {
+        case 'NDA':
+        case 'Mutual NDA':
+            container.innerHTML = getNDAContent();
+            break;
+        case 'Company Hub Agreement':
+            container.innerHTML = getCompanyHubContent();
+            break;
+        case 'Employee Hub Agreement':
+            container.innerHTML = getEmployeeHubContent();
+            break;
+        default:
+            container.innerHTML = getNDAContent();
     }
+}
 
     // NDA Agreement Content
 function getNDAContent() {
@@ -531,20 +531,168 @@ function getNDAContent() {
         <p style="margin-top: 30px;"><strong>By completing and submitting this form, the authorized representative of NDA Party agrees to be bound by all terms and conditions set forth in this Agreement.</strong></p>
     `;
 }
-    // Placeholder for agreements without text yet
-    function getPlaceholderContent(agreementName) {
-        return `
-            <h4>${agreementName.toUpperCase()}</h4>
-            <p><strong>Agreement ID:</strong> ${agreementId}</p>
-            
-            <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 4px; margin: 20px 0;">
-                <p><strong>Note:</strong> The full agreement text will be provided to you via email after submission.</p>
-                <p>By completing this form, you agree to the ${agreementName} terms as discussed with the T-Mobile Innovation team.</p>
-            </div>
 
-            <p>The executed agreement document will be sent to all parties upon completion.</p>
-        `;
-    }
+// Company Hub Agreement Content (Full Legal Agreement)
+function getCompanyHubContent() {
+    return `
+        <h4>INNOVATION HUB ACCESS AND PARTICIPATION AGREEMENT</h4>
+        
+        <p>This Innovation Hub Access and Participation Agreement (this "Agreement") is entered into between <strong>T-Mobile USA, Inc.</strong>, a Delaware corporation ("T-Mobile"), having its principal place of business at 12920 SE 38th Street, Bellevue, WA, 98006, U.S.A., and the Participant company identified below.</p>
+        
+        <p><strong>Agreement ID:</strong> ${agreementId}</p>
+        <p><strong>Effective Date:</strong> Upon execution by all parties</p>
+
+        <h4>1. OVERVIEW</h4>
+        <p>T-Mobile operates a technology innovation center consisting of a lab facility ("Innovation Hub"). Participant acknowledges that its use of the Innovation Hub is subject to the terms and conditions of this Agreement, and that use of the Innovation Hub is limited to the date(s) and time(s) determined by T-Mobile in its sole discretion. Before entry into the Innovation Hub, each Participant's employee and representative who will enter the Innovation Hub must sign and return to T-Mobile an Innovation Hub Access and Participation Acknowledgement and adhere to its terms and conditions while in the Innovation Hub.</p>
+
+        <h4>2. APPLICABILITY OF EXISTING T-MOBILE AGREEMENT TERMS</h4>
+        <p>If T-Mobile and Participant have an existing agreement for the provision of services or products, and there is a conflict between the terms of that existing agreement, or any order or statement of work under that existing agreement, and the terms of this Agreement, this Agreement will control for the subject matter contained herein, unless otherwise expressly stated. Where there is no conflict between the terms of an existing agreement with T-Mobile and this Agreement, this Agreement has no force or bearing on the terms of the existing agreement, and vice versa.</p>
+
+        <h4>3. TERM OF THE AGREEMENT; TERMINATION</h4>
+        <p>This Agreement will commence on the Effective Date and will continue for a term of two years ("Term"), unless terminated earlier by T-Mobile in accordance with this Section. T-Mobile may terminate this Agreement at any time, with or without cause, effective immediately upon written notice to Participant.</p>
+
+        <h4>4. GRANT OF RIGHT TO USE</h4>
+        <p>Participant's right to use any portion of the Innovation Hub at any time is granted in writing by T-Mobile pursuant to this Agreement. The specific Right to Use granted to Participant by T-Mobile will detail (a) which specific portions of the Innovation Hub are to be accessible by Participant; and (b) the specific length of time for which the Right to Use is granted. Participant may request an extension of the Term. T-Mobile reserves the right to decline any Participant's request to extend the period of time of the Right to Use.</p>
+
+        <h4>5. RESTRICTIONS ON USE; NON-EXCLUSIVE; LIMITED SPACE</h4>
+        <p>Participant understands, acknowledges, and agrees that:</p>
+        <ol type="a">
+            <li>T-Mobile reserves the right to issue credentials, including but not limited to access cards, in order to control access to or control activities in the Innovation Hub. Under no circumstances will Participant permit its personnel to share or loan the credentials provided by T-Mobile. T-Mobile has the right at any time and for any reason to cancel or revoke credentials previously issued to Participant personnel.</li>
+            <li>T-Mobile has the sole right to, at any time and for any length of time: (i) reserve exclusive or other use of the Innovation Hub or any part thereof; (ii) limit Participants use of the Innovation Hub to specific areas and assets; (iii) deny access and use of the Innovation Hub to any person or organization at any time; or (iv) close the Innovation Hub or any part thereof.</li>
+            <li>T-Mobile reserves the right to operate a "reservation system" in order to schedule and organize access to and control activities in the Innovation Hub.</li>
+            <li>Participant will not have exclusive or private use of the Innovation Hub and there may be third parties in the Innovation Hub during Participant's scheduled time.</li>
+            <li>Participant is limited to, and shall only use, the spaces and assets in the Innovation Hub that are allocated to Participant by T-Mobile, and only at the times allocated to Participant by T-Mobile.</li>
+            <li>If Participant is collaborating with a third party and wishes to have the third party enter into the Innovation Hub, Participant must communicate to the third party that such third party must contact T-Mobile to obtain access. Participant is responsible for any unauthorized access to the Innovation Hub.</li>
+        </ol>
+
+        <h4>6. NO T-MOBILE WARRANTIES</h4>
+        <ol type="a">
+            <li>Participant's access to the Innovation Hub, use of all equipment and tools, and all feedback provided by T-Mobile employees is provided <strong>"AS IS"</strong>, and T-Mobile makes no warranties, express or implied, and hereby disclaims all implied warranties, including any warranties of merchantability, non-infringement, and fitness for a particular purpose.</li>
+            <li>T-Mobile makes no representations or warranties of any kind regarding Participant's privacy while in the Innovation Hub or the confidentiality of the project Participant brings into the Innovation Hub. Participant acknowledges and agrees that Participant has no expectation of privacy or confidentiality regarding Participant's project or activities during use of the Innovation Hub.</li>
+        </ol>
+
+        <h4>7. INNOVATION HUB PERSONNEL</h4>
+        <p>Participant acknowledges and agrees that:</p>
+        <ol type="a">
+            <li>T-Mobile and its employees, including Innovation Hub personnel, will not supervise or closely monitor Participant's use of the Innovation Hub space, equipment, and tools;</li>
+            <li>Participant agrees that it is solely responsible for Participant's use of the space, equipment, and tools; and</li>
+            <li>T-Mobile Innovation Hub personnel are available to provide technical expertise and support, but are under no obligation to provide specific information, skills, or knowledge.</li>
+        </ol>
+
+        <h4>8. PURPOSE OF INNOVATION HUB; TERMS OF AGREEMENT</h4>
+        <p>Participant understands, acknowledges, and agrees that:</p>
+        <ol type="a">
+            <li>The Innovation Hub is an open and collaborative space for use by T-Mobile and third parties, including third parties that may be Participant's competitors, in the development of wireless technology and solutions that grow various technology ecosystems;</li>
+            <li>This Agreement is between T-Mobile and Participant only and that the rights, remedies, and obligations hereunder do not extend to any third party; and</li>
+            <li>The terms of this Agreement are confidential, and Participant will not disclose these terms to any third party.</li>
+        </ol>
+
+        <h4>9. INTELLECTUAL PROPERTY; FEEDBACK</h4>
+        <p>Participant understands, acknowledges, and agrees that:</p>
+        <ol type="a">
+            <li>Participant's use of the Innovation Hub does not affect Participant's ownership of Participant's project, and signing this Agreement does not convey any rights in, grant any license to, or give ownership of Participant's project to T-Mobile or any third party;</li>
+            <li>Participant's use of the Innovation Hub does not give Participant a right to use, license to, or ownership of any T-Mobile or third-party project, documentation, materials, software, services, products, equipment, or intellectual property;</li>
+            <li>For feedback given by Participant to T-Mobile or a third party about the Innovation Hub, tools, equipment, or third-party projects, Participant gives the feedback recipient, without charge, the right to use, share, and commercialize the feedback in any way and for any purpose;</li>
+            <li>T-Mobile may independently develop or have developed products or services that are similar to materials and information that Participant brings into the Innovation Hub.</li>
+        </ol>
+
+        <h4>10. PARTICIPANT'S WARRANTIES</h4>
+        <p>Participant warrants the following:</p>
+        <ol type="a">
+            <li>Participant owns or has a license to use all materials and information that Participant brings into the Innovation Hub and that Participant's activity will not infringe or violate any third-party rights or violate any applicable laws or regulations;</li>
+            <li>Participant's project and any software or product is, and will be at all times, free of computer viruses, Trojan horses, trap doors, worms, or other malicious computer programming routines.</li>
+        </ol>
+
+        <h4>11. DAMAGE TO INNOVATION HUB; PERSONAL INJURY</h4>
+        <p>Participant will use the Innovation Hub, software, hardware, equipment and tools only in the manner for which they are intended and using best efforts to prevent any loss, destruction, or damage, other than reasonable wear and tear. Participant is responsible for any loss, damage, or destruction it causes to the Innovation Hub and for any personal injury or death that may arise out of Participant's acts or omissions.</p>
+
+        <h4>12. INSURANCE</h4>
+        <p>Participant represents that it has a current policy for commercial general liability insurance with limits of liability not less than $1,000,000 per occurrence, combined single limit for bodily injury and property damage, with a $2,000,000 general aggregate.</p>
+
+        <h4>13. INDEMNIFICATION</h4>
+        <p>Participant will indemnify, defend, and hold harmless T-Mobile and its affiliates, and their respective officers, directors, employees, agents, contractors and representatives from and against all damages, costs, fees, expenses, and liabilities asserted by a third party to the extent related to: (a) a breach of this Agreement; (b) personal or bodily injury caused during use of the Innovation Hub; (c) property damage or loss caused during use of the Innovation Hub; and (d) Participant's infringement or violation of any intellectual property right or obligation.</p>
+
+        <h4>14. USE OF MARKETING MATERIALS</h4>
+        <p>Participant hereby irrevocably grants T-Mobile a royalty-free right to use, distribute, publish, exhibit, digitize, broadcast, display, reproduce, and otherwise exploit Participant's name, trademarks, trade names, or logos in any manner or media whatsoever, anywhere in the world, in perpetuity, for the purpose of advertising, marketing or trade with respect to the Innovation Hub.</p>
+
+        <h4>15. WAIVER AND RELEASE OF CLAIMS</h4>
+        <p>Participant will not make any claims against T-Mobile and hereby releases T-Mobile of all claims regarding or resulting from Participant's access to and use of the Innovation Hub, including privacy and confidentiality of Participant's projects, damage or loss of property and personal injury, and T-Mobile's use of marketing materials.</p>
+
+        <h4>16. GOVERNING LAW</h4>
+        <p>This Agreement will be governed by the laws of the state of Washington without regard to any rules governing conflicts of laws. The parties consent to the exclusive jurisdiction over and venue in the state and federal courts located in King County, Washington.</p>
+
+        <h4>17. NO BUSINESS ASSOCIATION; NO GUARANTEE OF ACCESS</h4>
+        <p>This Agreement does not create any formal business association between the parties, nor any obligation to buy, sell or otherwise transact in any products or services. Nothing in this Agreement obligates T-Mobile to provide access to the Innovation Hub at any time or at a particular time, and T-Mobile may revoke access at any time.</p>
+
+        <h4>SIGNATURES</h4>
+        <p><strong>By completing and submitting this form, the authorized representative of Participant agrees to be bound by all terms and conditions set forth in this Agreement.</strong></p>
+        
+        <p style="font-size: 12px; color: #666; margin-top: 20px;">Version: 01.06.26 | Agreement ID: ${agreementId}</p>
+    `;
+}
+
+// Employee Hub Agreement Content (Individual Acknowledgement)
+function getEmployeeHubContent() {
+    return `
+        <h4>INNOVATION HUB ACCESS AND PARTICIPATION ACKNOWLEDGEMENT</h4>
+        
+        <p><strong>Agreement ID:</strong> ${agreementId}</p>
+        <p><strong>Effective Date:</strong> Upon acceptance</p>
+
+        <p>By signing this acknowledgement and by requesting access to this Innovation Hub, I acknowledge and agree that:</p>
+
+        <ol>
+            <li><strong>Access Times:</strong> I will only enter the Innovation Hub on the date and at the time specified by T-Mobile.</li>
+
+            <li><strong>No Unauthorized Guests:</strong> I will not bring anyone with me to the Innovation Hub who does not have express written approval to enter the Innovation Hub, and I will not use my badge to allow anyone who does not have T-Mobile's express written approval to enter the Innovation Hub.</li>
+
+            <li><strong>Badge Required:</strong> I will not enter the Innovation Hub without using my badge.</li>
+
+            <li><strong>Personnel Present:</strong> I will only enter the Innovation Hub if Innovation Hub personnel are present in the Innovation Hub.</li>
+
+            <li><strong>Personal Items:</strong> I will store personal items such as bags, umbrellas, and coats only in the locker provided for my use.</li>
+
+            <li><strong>Approved Items Only:</strong> I will only bring into the Innovation Hub items required for my approved activities in the space; provided, however I may bring drinks or food into the Innovation Hub but will use the highest standard of care regarding prevention of spills or soiling the space, and I will dispose of all trash before I leave the space.</li>
+
+            <li><strong>Proper Use:</strong> I will use the Innovation Hub, and any provided equipment and tools, only for my approved activities and in the manner for which they are intended.</li>
+
+            <li><strong>Respectful Sharing:</strong> I will make best efforts not to interfere with other occupants' activities, including minimizing the space I use and the clutter I create as much as possible.</li>
+
+            <li><strong>Clean Exit:</strong> I will leave the Innovation Hub in a state at least as clean as it was when I was granted access.</li>
+
+            <li><strong>Restricted Areas:</strong> I will not attempt to gain access to areas of the Innovation Hub to which I have not explicitly been granted access, that are marked as off limits, or that Innovation personnel have verbally informed me during orientation or at any other time are off limits.</li>
+
+            <li><strong>Orientation:</strong> I will participate in an orientation provided by Innovation Hub personnel regarding use of the Innovation Hub, including safety information and use of the space, equipment, and tools, and during my use of the Innovation Hub I will adhere to all information and rules provided during the orientation.</li>
+
+            <li><strong>Emergency Protocols:</strong> I will familiarize myself with the emergency exits and follow all T-Mobile safety and emergency protocols provided in the Innovation Hub, including postings and signage on the walls.</li>
+
+            <li><strong>Personnel Requests:</strong> I will comply with all Innovation Hub personnel requests made and directions given while I am in the Innovation Hub.</li>
+
+            <li><strong>Supervised Equipment:</strong> I understand that certain equipment in the Innovation Hub space requires Innovation Hub personnel approval for use, or supervision during use. Such equipment is clearly labeled, and I will not use that equipment without the required approval or supervision.</li>
+
+            <li><strong>Drone Use:</strong> I understand that I must have approval for drone use from a T-Mobile Innovation Hub drone pilot. Unless a drone pilot gives me explicit approval to fly a drone myself, a drone pilot must fly the drone for me.</li>
+
+            <li><strong>Shared Space:</strong> I understand that the Innovation Hub is an open and collaborative space for use by T-Mobile and third parties, including third parties that may be my competitors, in the development of wireless technology and solutions that grow the wireless ecosystem.</li>
+
+            <li><strong>Non-Exclusive Use:</strong> I understand that I will not have exclusive or private use of the Innovation Hub and there may be third parties in the Innovation Hub during my scheduled time.</li>
+
+            <li><strong>Proper Care:</strong> I will use the Innovation Hub and tools and equipment provided by T-Mobile only in the manner for which they are intended and using best efforts to prevent any destruction or damage, other than reasonable wear and tear resulting from expected use.</li>
+
+            <li><strong>No Removal:</strong> I will not remove T-Mobile or any third-party equipment, tools, or other material from the Innovation Hub without the express permission of T-Mobile or the applicable third party.</li>
+
+            <li><strong>Marketing Rights:</strong> I hereby irrevocably grant T-Mobile, its agents, and others working for it or on its behalf, a royalty-free right to use, distribute, publish, exhibit, digitize, broadcast, display, reproduce, and otherwise exploit my photograph, likeness, voice, name, statements, and testimonials or any material based upon or derived therefrom, in any manner or media whatsoever, anywhere in the world, in perpetuity, for the purpose of advertising, marketing, or trade.</li>
+
+            <li><strong>Ownership:</strong> T-Mobile shall be the sole owner of all right, title, and interest in and to all films, portrayals, photographs, and recordings produced hereunder, including all copyrights therein. If I should receive any print, negative, or other copy thereof, I shall not authorize its use by anyone else.</li>
+
+            <li><strong>No Compensation:</strong> I agree that my participation in any marketing, advertising, or promotional efforts by T-Mobile shall not entitle me to any payment or compensation.</li>
+        </ol>
+
+        <h4>ACKNOWLEDGMENT</h4>
+        <p><strong>By completing and submitting this form, I acknowledge understanding and acceptance of all terms and conditions set forth in this Acknowledgement.</strong></p>
+        
+        <p style="font-size: 12px; color: #666; margin-top: 20px;">Version: 01.06.26 | Agreement ID: ${agreementId}</p>
+    `;
+}
 
     // Toggle agreement text view
     function toggleAgreementText() {
