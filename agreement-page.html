@@ -4,553 +4,778 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agreement Signing</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            margin: 0;
-        }
+<style>
+    .agreement-form {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .agreement-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e1e1e1;
+    }
+    
+    .agreement-id {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-weight: bold;
+        color: #2c5aa0;
+        margin: 10px 0;
+    }
+    
+    .form-section {
+        margin-bottom: 25px;
+        padding: 15px;
+        border: 1px solid #e1e1e1;
+        border-radius: 5px;
+    }
+    
+    .form-section h3 {
+        margin-top: 0;
+        color: #333;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 8px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+    }
+    
+    .required {
+        color: #d32f2f;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    
+    .form-control:focus {
+        border-color: #2c5aa0;
+        outline: none;
+        box-shadow: 0 0 5px rgba(44, 90, 160, 0.3);
+    }
+    
+    .error {
+        border-color: #d32f2f !important;
+        background-color: #ffebee;
+    }
+    
+    .error-message {
+        color: #d32f2f;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+    }
+    
+    .warning-message {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        color: #856404;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+    
+    .btn-primary {
+        background-color: #2c5aa0;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .btn-primary:hover {
+        background-color: #1e3d6f;
+    }
+    
+    .btn-primary:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
 
-        .agreement-form {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .agreement-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e1e1e1;
-        }
-        
-        .agreement-id {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-weight: bold;
-            color: #2c5aa0;
-            margin: 10px 0;
-        }
-        
-        .form-section {
-            margin-bottom: 25px;
-            padding: 15px;
-            border: 1px solid #e1e1e1;
-            border-radius: 5px;
-        }
-        
-        .form-section h3 {
-            margin-top: 0;
-            color: #333;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 8px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #555;
-        }
-        
-        .required {
-            color: #d32f2f;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        
-        .form-control:focus {
-            border-color: #2c5aa0;
-            outline: none;
-            box-shadow: 0 0 5px rgba(44, 90, 160, 0.3);
-        }
-        
-        .error {
-            border-color: #d32f2f !important;
-            background-color: #ffebee;
-        }
-        
-        .error-message {
-            color: #d32f2f;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .warning-message {
-            background-color: #fff3cd;
-            border: 1px solid #ffc107;
-            color: #856404;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 13px;
-        }
-        
-        .btn-primary {
-            background-color: #2c5aa0;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .btn-primary:hover {
-            background-color: #1e3d6f;
-        }
-        
-        .btn-primary:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #2c5aa0;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 2s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .completion-success {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            background-color: #e8f5e8;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        
-        .completion-success h2 {
-            color: #2e7d32;
-            margin-bottom: 15px;
-        }
-        
-        .pdf-download {
-            background-color: #2c5aa0;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 4px;
-            display: inline-block;
-            margin: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="agreement-form">
-        <div class="agreement-header">
-            <h1>Agreement Completion</h1>
-            <div class="agreement-id" id="agreement-id-display">
-                Loading...
-            </div>
-            <p>Please complete the following information to finalize your agreement.</p>
+    .btn-secondary {
+        background: white;
+        color: #2c5aa0;
+        padding: 10px 20px;
+        border: 2px solid #2c5aa0;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+        background: #2c5aa0;
+        color: white;
+    }
+    
+    .loading {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+    }
+    
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #2c5aa0;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin: 0 auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .completion-success {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        background-color: #e8f5e8;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+    
+    .completion-success h2 {
+        color: #2e7d32;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="agreement-form">
+    <div class="agreement-header">
+        <h1>Agreement Completion</h1>
+        <div class="agreement-id" id="agreement-id-display">
+            Loading Agreement ID...
         </div>
-
-        <div id="form-container">
-            <form id="agreement-completion-form">
-                <!-- Company Information Section -->
-                <div class="form-section">
-                    <h3>Company Information</h3>
-                    
-                    <div class="form-group">
-                        <label for="company-name">Legal Company Name <span class="required">*</span></label>
-                        <input type="text" id="company-name" name="companyName" class="form-control" required>
-                        <div class="error-message" id="company-name-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="company-type">Company Type</label>
-                        <select id="company-type" name="companyType" class="form-control">
-                            <option value="">Select company type (optional)</option>
-                            <option value="Corporation">Corporation</option>
-                            <option value="LLC">LLC</option>
-                            <option value="Partnership">Partnership</option>
-                            <option value="Sole Proprietorship">Sole Proprietorship</option>
-                            <option value="Non-Profit">Non-Profit</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="business-address">Business Address <span class="required">*</span></label>
-                        <textarea id="business-address" name="businessAddress" class="form-control" 
-                                  rows="3" required></textarea>
-                        <div class="error-message" id="business-address-error"></div>
-                    </div>
-                </div>
-
-                <!-- Contact Information Section -->
-                <div class="form-section">
-                    <h3>Authorized Representative</h3>
-                    
-                    <div class="form-group">
-                        <label for="signatory-name">Authorized Signatory Name <span class="required">*</span></label>
-                        <input type="text" id="signatory-name" name="signatoryName" class="form-control" required>
-                        <div class="error-message" id="signatory-name-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="signatory-title">Title/Position <span class="required">*</span></label>
-                        <input type="text" id="signatory-title" name="signatoryTitle" class="form-control" required>
-                        <div class="error-message" id="signatory-title-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="work-email">Work Email Address <span class="required">*</span></label>
-                        <input type="email" id="work-email" name="workEmail" class="form-control" required>
-                        <div class="warning-message">
-                            <strong>Work Email Required:</strong> Please use your company email address. 
-                            Generic email providers (Gmail, Yahoo, etc.) are not accepted.
-                        </div>
-                        <div class="error-message" id="work-email-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone-number">Phone Number</label>
-                        <input type="tel" id="phone-number" name="phoneNumber" class="form-control">
-                        <div class="error-message" id="phone-number-error"></div>
-                    </div>
-                </div>
-
-                <!-- Legal Acceptance Section -->
-                <div class="form-section">
-                    <h3>Legal Acceptance</h3>
-                    
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="terms-agreement" name="termsAgreement" required>
-                            <span class="required">*</span> I have read, understood, and agree to all terms and conditions of this agreement.
-                        </label>
-                        <div class="error-message" id="terms-agreement-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="digital-signature">Digital Signature (Type Full Name) <span class="required">*</span></label>
-                        <input type="text" id="digital-signature" name="digitalSignature" class="form-control" 
-                               placeholder="Type your full legal name" required>
-                        <div class="error-message" id="digital-signature-error"></div>
-                        <small style="color: #666;">By typing your name, you are providing a legal digital signature.</small>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary" id="submit-btn">
-                    Complete Agreement
-                </button>
-            </form>
-        </div>
-
-        <div class="loading" id="loading-indicator">
-            <div class="spinner"></div>
-            <p>Processing your agreement...</p>
-        </div>
-
-        <div class="completion-success" id="completion-success">
-            <h2>✅ Agreement Successfully Completed!</h2>
-            <p>Your agreement <strong id="completed-agreement-id"></strong> has been processed.</p>
-            <p>A copy has been sent to your email address.</p>
-            <a href="#" class="pdf-download" id="pdf-download-link">Download PDF Agreement</a>
-            <p style="margin-top: 20px; color: #666;">
-                Thank you for completing this agreement process. 
-                Please retain the PDF for your records.
-            </p>
-        </div>
+        <p>Please complete the following information to finalize your agreement.</p>
     </div>
 
-    <script>
-        // Configuration
-        const CONFIG = {
-            API_BASE_URL: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f22ee6457eb84ca3a32e3f970a3150be/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sCEtdfiLOS_Ull_JD6DG12B23XJinjCk77mXDy8qUIA'
-        };
+    <div id="form-container">
+        <!-- Agreement Review Section -->
+        <div class="form-section" style="background: #fafafa;">
+            <h3>📄 Review Agreement</h3>
+            <div style="background: #e3f2fd; border: 1px solid #2196f3; color: #1565c0; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+                <strong>Important:</strong> Please review the agreement terms below before completing this form.
+            </div>
 
-        // Work email validation
-        const GENERIC_DOMAINS = [
-            'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
-            'aol.com', 'icloud.com', 'live.com', 'msn.com',
-            'comcast.net', 'verizon.net', 'att.net', 'cox.net',
-            'protonmail.com', 'mail.com', 'yandex.com'
-        ];
+            <div style="text-align: center; margin: 15px 0;">
+                <a href="#" class="btn-secondary" onclick="toggleAgreementText(); return false;">
+                    📖 Read Agreement Terms
+                </a>
+            </div>
 
-        // Global variables
-        let agreementId = '';
-        let securityToken = '';
-        let pdfUrl = '';
+            <!-- HTML Agreement Text - Populated Dynamically -->
+            <div id="agreement-text" style="display: none; background: white; padding: 20px; border-radius: 4px; max-height: 400px; overflow-y: auto; line-height: 1.6; margin-top: 10px; border: 1px solid #ddd;">
+                <!-- Content loaded by JavaScript based on agreement type -->
+            </div>
+        </div>
 
-        // Initialize immediately when script loads
-        (function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            agreementId = urlParams.get('id') || '';
-            securityToken = urlParams.get('token') || '';
-            pdfUrl = urlParams.get('pdfUrl') || '';
-            
-            console.log('Parameters loaded:', {agreementId, securityToken, pdfUrl: pdfUrl.substring(0, 50) + '...'});
-        })();
+        <form id="agreement-completion-form">
+            <!-- Company Information Section -->
+            <div class="form-section">
+                <h3>Company Information</h3>
+                
+                <div class="form-group">
+                    <label for="company-name">Legal Company Name <span class="required">*</span></label>
+                    <input type="text" id="company-name" name="companyName" class="form-control" required>
+                    <div class="error-message" id="company-name-error"></div>
+                </div>
+                
+                <!--<div class="form-group">
+                    <label for="company-type">Company Type</label>
+                    <select id="company-type" name="companyType" class="form-control">
+                        <option value="">Select company type (optional)</option>
+                        <option value="Corporation">Corporation</option>
+                        <option value="LLC">LLC</option>
+                        <option value="Partnership">Partnership</option>
+                        <option value="Sole Proprietorship">Sole Proprietorship</option>
+                        <option value="Non-Profit">Non-Profit</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="error-message" id="company-type-error"></div>
+                </div>
+            -->
+                
+                <div class="form-group">
+                    <label for="business-address">Business Address <span class="required">*</span></label>
+                    <textarea id="business-address" name="businessAddress" class="form-control" 
+                              rows="3" required></textarea>
+                    <div class="error-message" id="business-address-error"></div>
+                </div>
+            </div>
 
-        // Initialize form when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing form...');
-            
-            // Display agreement ID
-            const display = document.getElementById('agreement-id-display');
-            if (agreementId) {
-                display.textContent = agreementId;
-            } else {
-                display.textContent = 'Invalid Access';
-                showInvalidAccessError();
-                return;
+            <!-- Contact Information Section -->
+            <div class="form-section">
+                <h3>Authorized Representative</h3>
+                
+                <div class="form-group">
+                    <label for="signatory-name">Authorized Signatory Name <span class="required">*</span></label>
+                    <input type="text" id="signatory-name" name="signatoryName" class="form-control" required>
+                    <div class="error-message" id="signatory-name-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signatory-title">Title/Position <span class="required">*</span></label>
+                    <input type="text" id="signatory-title" name="signatoryTitle" class="form-control" required>
+                    <div class="error-message" id="signatory-title-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="work-email">Work Email Address <span class="required">*</span></label>
+                    <input type="email" id="work-email" name="workEmail" class="form-control" required>
+                    <div class="warning-message">
+                        <strong>Work Email Required:</strong> Please use your company email address. 
+                        Generic email providers (Gmail, Yahoo, etc.) are not accepted.
+                    </div>
+                    <div class="error-message" id="work-email-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone-number">Phone Number</label>
+                    <input type="tel" id="phone-number" name="phoneNumber" class="form-control">
+                    <div class="error-message" id="phone-number-error"></div>
+                </div>
+            </div>
+
+            <!-- Agreement Specific Fields (Dynamic based on agreement type) -->
+            <div class="form-section" id="agreement-specific-section">
+                <h3>Agreement Details</h3>
+                <div id="dynamic-fields">
+                    <!-- Fields populated dynamically based on agreement type -->
+                </div>
+            </div>
+
+            <!-- Legal Acceptance Section -->
+            <div class="form-section">
+                <h3>Legal Acceptance</h3>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="terms-agreement" name="termsAgreement" required>
+                        <span class="required">*</span> I have read, understood, and agree to all terms and conditions of this agreement.
+                    </label>
+                    <div class="error-message" id="terms-agreement-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="digital-signature">Digital Signature (Type Full Name) <span class="required">*</span></label>
+                    <input type="text" id="digital-signature" name="digitalSignature" class="form-control" 
+                           placeholder="Type your full legal name" required>
+                    <div class="error-message" id="digital-signature-error"></div>
+                    <small style="color: #666;">By typing your name, you are providing a legal digital signature.</small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submit-btn">
+                Complete Agreement
+            </button>
+        </form>
+    </div>
+
+    <div class="loading" id="loading-indicator">
+        <div class="spinner"></div>
+        <p>Processing your agreement...</p>
+    </div>
+
+    <div class="completion-success" id="completion-success">
+        <h2>✅ Agreement Successfully Completed!</h2>
+        <p>Thank you for completing your agreement!</p>
+        <p><strong>Agreement ID:</strong> <span id="completed-agreement-id"></span></p>
+        
+        <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 20px 0;">
+            <strong>📧 Next Steps:</strong>
+            <p style="margin: 5px 0 0 0;">The executed agreement PDF is being generated and will be emailed to all parties within the next few minutes. Please check your email.</p>
+        </div>
+        
+        <p style="margin-top: 20px; color: #666;">
+            You will receive the final signed agreement at: <strong id="user-email"></strong>
+        </p>
+    </div>
+</div>
+
+<script>
+    // Configuration
+    const CONFIG = {
+        API_BASE_URL: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f22ee6457eb84ca3a32e3f970a3150be/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sCEtdfiLOS_Ull_JD6DG12B23XJinjCk77mXDy8qUIA',
+        API_KEY: '',
+        COMPANY_NAME: 'T-Mobile'
+    };
+
+    // Work email validation
+    const GENERIC_DOMAINS = [
+        'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
+        'aol.com', 'icloud.com', 'live.com', 'msn.com',
+        'comcast.net', 'verizon.net', 'att.net', 'cox.net',
+        'protonmail.com', 'mail.com', 'yandex.com'
+    ];
+
+    // Global variables
+    let agreementData = {};
+    let agreementId = '';
+    let securityToken = '';
+    let agreementType = '';
+
+    // Initialize form when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeForm();
+        setupValidation();
+        setupFormSubmission();
+    });
+
+    // Initialize form with URL parameters
+    function initializeForm() {
+        // Extract agreement ID and token from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        agreementId = urlParams.get('id') || urlParams.get('agreement');
+        securityToken = urlParams.get('token');
+        agreementType = urlParams.get('type') || 'NDA';
+        
+        // Validate both agreement ID and token are present
+        if (!agreementId || !securityToken) {
+            showInvalidAccessError();
+            return;
+        }
+
+        // Validate agreement ID format
+        if (!/^[A-Z]+-\d{4}-\d{4}-[A-Z0-9]{4}$/.test(agreementId)) {
+            showInvalidAccessError();
+            return;
+        }
+
+        // Validate token format
+        const isValidGUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(securityToken);
+        const isValid32Char = /^[A-Za-z0-9]{32}$/.test(securityToken);
+        
+        if (!isValidGUID && !isValid32Char) {
+            showInvalidAccessError();
+            return;
+        }
+
+        // Display agreement ID
+        document.getElementById('agreement-id-display').textContent = agreementId;
+        
+        // Load agreement text based on type
+        loadAgreementText(agreementType);
+        
+        // Pre-fill form fields from URL
+        prefillFormFields();
+    }
+
+    // Pre-fill form fields from URL parameters
+    function prefillFormFields() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Get pre-fill values from URL
+        const prefilledCompanyName = urlParams.get('companyName');
+        const prefilledContactName = urlParams.get('contactName');
+        const prefilledContactEmail = urlParams.get('contactEmail');
+        
+        console.log('Pre-fill data:', {
+            companyName: prefilledCompanyName,
+            contactName: prefilledContactName,
+            contactEmail: prefilledContactEmail
+        });
+        
+        // Pre-fill company name
+        if (prefilledCompanyName) {
+            const companyField = document.getElementById('company-name');
+            if (companyField) {
+                companyField.value = decodeURIComponent(prefilledCompanyName);
+                console.log('Filled company name:', companyField.value);
             }
+        }
+        
+        // Pre-fill signatory name
+        if (prefilledContactName) {
+            const signatoryField = document.getElementById('signatory-name');
+            if (signatoryField) {
+                signatoryField.value = decodeURIComponent(prefilledContactName);
+                console.log('Filled signatory name:', signatoryField.value);
+            }
+        }
+        
+        // Pre-fill work email
+        if (prefilledContactEmail) {
+            const emailField = document.getElementById('work-email');
+            if (emailField) {
+                emailField.value = decodeURIComponent(prefilledContactEmail);
+                console.log('Filled email:', emailField.value);
+            }
+        }
+
+        // Add dynamic fields based on agreement type
+        addDynamicFields(agreementType, {});
+    }
+
+    // Load agreement text based on type
+    function loadAgreementText(type) {
+        const container = document.getElementById('agreement-text');
+        
+        switch(type) {
+            case 'NDA':
+            case 'Mutual NDA':
+                container.innerHTML = getNDAContent();
+                break;
+            case 'Company Hub Agreement':
+                container.innerHTML = getPlaceholderContent('Company Hub Agreement');
+                break;
+            case 'Employee Hub Agreement':
+                container.innerHTML = getPlaceholderContent('Employee Hub Agreement');
+                break;
+            default:
+                container.innerHTML = getPlaceholderContent('Agreement');
+        }
+    }
+
+    // NDA Agreement Content
+function getNDAContent() {
+    return `
+        <h4>MUTUAL NON-DISCLOSURE AGREEMENT</h4>
+        <p><strong>Agreement ID:</strong> ${agreementId}</p>
+        
+        <p>This Non-Disclosure Agreement (the "Agreement") is by and between T-Mobile USA, Inc. ("T-Mobile") and the person or entity identified in the digital Submission to which these Non-Disclosure Terms and Conditions are linked (such person or entity, "NDA Party").</p>
+
+        <h4>1. Purpose</h4>
+        <p>The parties desire to exchange information on a confidential basis related to an actual or potential business relationship or activities (the "Purpose"). "Confidential Information" means all non-public information or materials, including information and materials disclosed prior to or after the date of this Agreement, that are marked as confidential, orally described as confidential, or should reasonably be understood to be confidential. However, Confidential Information does not include anything that (i) was previously known to the receiving party without any confidentiality obligation, (ii) is or becomes publicly known through no wrongful act of the receiving party, (iii) was rightfully received from a third party without any confidentiality obligation to that third party, or (iv) was independently developed by the receiving party without using any Confidential Information.</p>
+
+        <h4>2. Nondisclosure and Limited Use Obligations</h4>
+        <p>Each party will protect Confidential Information disclosed by the other party by (i) not disclosing it to third parties, (ii) preserving its confidentiality with the same level of care it applies to its own similar types of Confidential Information, and always by taking reasonable steps to preserve confidentiality, and (iii) using it only for the Purpose. A party will disclose the other party's Confidential Information only to its employees, affiliates and consultants who need to know such information. A party is responsible for any disclosure or misuse of Confidential Information by its employees, affiliates or consultants.</p>
+
+        <h4>3. Legally-Required Disclosures</h4>
+        <p>A receiving party may, without breaching this Agreement, disclose Confidential Information disclosed by the other party to the extent required to comply with a court order or applicable law or regulation. If a receiving party becomes subject to such a requirement, it must notify the disclosing party as soon as possible and, in any case, before it makes the required disclosure (if such notice is allowed) and it must cooperate with the disclosing party (if requested, and at the disclosing party's expense) to seek a protective order or similar protection for its Confidential Information. The receiving party will disclose only such information as is legally required and will use commercially reasonable efforts to obtain confidential treatment for any Confidential Information that is so disclosed.</p>
+
+        <h4>4. Injunctive Relief</h4>
+        <p>Each party acknowledges that money damages may not adequately protect the disclosing party against actual or threatened breach of this Agreement and that such breach would result in irreparable harm to the disclosing party. Because of this, a disclosing party may pursue injunctive relief to protect its Confidential Information in any court of competent jurisdiction, without having to post bond or guarantee. The party who has breached or threatened to breach this Agreement will not raise the defense of an adequate remedy at law. This provision does not alter any other remedies available to either party.</p>
+
+        <h4>5. Length of Obligations</h4>
+        <p>This Agreement takes effect when both T-Mobile and NDA Party have signed and will continue until either party elects to terminate with thirty (30) days prior written notice to the other party. In the event that a definitive agreement is entered into by the parties, and such definitive agreement includes provisions that conflict with provisions contained herein, then the provisions of the definitive agreement control with regard to the subject matter contained therein. This Agreement applies to any Confidential Information disclosed while it is in effect, and it will apply to all such Confidential Information for a period of five (5) years from its disclosure, regardless of any termination of this Agreement, except this Agreement will apply indefinitely to trade secret information and personal or customer information.</p>
+
+        <h4>6. Other Terms</h4>
+        <p>Each party will comply with all applicable laws and regulations, including but not limited to, data privacy, sanctioned persons and export, in the disclosure and use of Confidential Information. The disclosing party does not grant, under this Agreement, any rights under its patents, copyrights, trademarks or other proprietary rights. The disclosing party does not make any representation or warranty (whether express, implied or statutory) under this Agreement regarding any Confidential Information it discloses. The NDA Party shall not access T-Mobile's wireless or wireline network, systems that support U.S. Lawful Process or systems that store customer information. This Agreement does not create any formal business association between the parties, nor any obligation to buy, sell or otherwise transact in any products or services. If a party transfers this Agreement, including as part of a change of control, it will not disclose Confidential Information disclosed by the other party to its transferee unless it has received the disclosing party's express written approval. The laws of the State of Washington, USA (without their conflict of laws principles) govern this Agreement. The parties agree to submit to the jurisdiction of any state court sitting in King County, Washington or any federal court seated in Seattle, Washington. No failure or delay in enforcing any right will be deemed a waiver. This Agreement may be changed only in a writing signed by both parties. If any term of this Agreement is deemed illegal or otherwise unenforceable, that term will be severed and the rest of this Agreement will remain in full force and effect. With the exception of any separate agreement that references this Agreement, this Agreement is the entire agreement between the parties on disclosure and use of Confidential Information, and it supersedes any other negotiations, communications or agreements on those topics.</p>
+
+        <h4>SIGNATURES</h4>
+        <p>IN WITNESS HEREOF, the Parties have entered into this Agreement as of the date that opt-in to the terms and conditions via the T-Mobile Innovation intake process.</p>
+        
+        <p style="font-size: 12px; color: #666; margin-top: 20px;">Version: 09.10.24</p>
+        
+        <p style="margin-top: 30px;"><strong>By completing and submitting this form, the authorized representative of NDA Party agrees to be bound by all terms and conditions set forth in this Agreement.</strong></p>
+    `;
+}
+    // Placeholder for agreements without text yet
+    function getPlaceholderContent(agreementName) {
+        return `
+            <h4>${agreementName.toUpperCase()}</h4>
+            <p><strong>Agreement ID:</strong> ${agreementId}</p>
             
-            setupValidation();
-            setupFormSubmission();
+            <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                <p><strong>Note:</strong> The full agreement text will be provided to you via email after submission.</p>
+                <p>By completing this form, you agree to the ${agreementName} terms as discussed with the T-Mobile Innovation team.</p>
+            </div>
+
+            <p>The executed agreement document will be sent to all parties upon completion.</p>
+        `;
+    }
+
+    // Toggle agreement text view
+    function toggleAgreementText() {
+        const textDiv = document.getElementById('agreement-text');
+        
+        if (textDiv.style.display === 'none') {
+            textDiv.style.display = 'block';
+            textDiv.scrollTop = 0;
+        } else {
+            textDiv.style.display = 'none';
+        }
+    }
+
+    // Show invalid access error
+    function showInvalidAccessError() {
+        document.getElementById('form-container').innerHTML = `
+            <div style="text-align: center; padding: 40px; background-color: #ffebee; border-radius: 8px; margin-top: 20px;">
+                <h2 style="color: #d32f2f; margin-bottom: 15px;">Access Not Available</h2>
+                <p style="color: #666; margin-bottom: 15px;">
+                    This agreement completion link is not valid or has expired.
+                </p>
+                <p style="color: #666; font-size: 14px;">
+                    If you believe this is an error, please contact the person who sent you this link.
+                </p>
+            </div>
+        `;
+        
+        document.getElementById('agreement-id-display').textContent = 'Invalid Access';
+    }
+
+    // Add agreement-specific dynamic fields
+    function addDynamicFields(agreementType, fieldData) {
+        const container = document.getElementById('dynamic-fields');
+        
+        switch (agreementType) {
+            case 'Service Agreement':
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label for="service-rate">Hourly Rate (USD)</label>
+                        <input type="number" id="service-rate" name="serviceRate" 
+                               class="form-control" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-description">Service Description</label>
+                        <textarea id="service-description" name="serviceDescription" 
+                                 class="form-control" rows="3"></textarea>
+                    </div>
+                `;
+                break;
+                
+            case 'NDA':
+            case 'Mutual NDA':
+                container.innerHTML = `
+                    <p>Standard NDA terms apply as outlined in the agreement text above.</p>
+                `;
+                break;
+                
+            default:
+                container.innerHTML = '<p>Standard agreement terms apply.</p>';
+        }
+    }
+
+    // Setup form validation
+    function setupValidation() {
+        // Real-time email validation
+        document.getElementById('work-email').addEventListener('blur', function() {
+            validateWorkEmail(this.value, 'work-email');
         });
 
-        // Show invalid access error
-        function showInvalidAccessError() {
-            document.getElementById('form-container').innerHTML = `
-                <div style="text-align: center; padding: 40px; background-color: #ffebee; border-radius: 8px; margin-top: 20px;">
-                    <h2 style="color: #d32f2f; margin-bottom: 15px;">Invalid Access</h2>
-                    <p style="color: #666; margin-bottom: 15px;">
-                        This agreement link is invalid or has expired.
-                    </p>
-                    <p style="color: #666; font-size: 14px;">
-                        Please contact the person who sent you this link.
-                    </p>
-                </div>
-            `;
+        // Digital signature validation
+        document.getElementById('digital-signature').addEventListener('input', function() {
+            validateDigitalSignature();
+        });
+    }
+
+    // Validate work email domain
+    function validateWorkEmail(email, fieldId) {
+        const field = document.getElementById(fieldId);
+        const errorDiv = document.getElementById(fieldId + '-error');
+        
+        if (!email) {
+            return false;
         }
 
-        // Setup form validation
-        function setupValidation() {
-            const emailField = document.getElementById('work-email');
-            const sigField = document.getElementById('digital-signature');
+        // Basic email format check
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showFieldError(field, errorDiv, 'Please enter a valid email address.');
+            return false;
+        }
+
+        // Check for generic domains
+        const domain = email.split('@')[1].toLowerCase();
+        if (GENERIC_DOMAINS.includes(domain)) {
+            showFieldError(field, errorDiv, 'Please use your work email address. Generic email providers are not accepted.');
+            return false;
+        }
+
+        // Check for temporary email patterns
+        if (domain.includes('tempmail') || domain.includes('disposable')) {
+            showFieldError(field, errorDiv, 'Temporary email addresses are not permitted.');
+            return false;
+        }
+
+        clearFieldError(field, errorDiv);
+        return true;
+    }
+
+    // Validate digital signature matches signatory name
+    function validateDigitalSignature() {
+        const signatoryName = document.getElementById('signatory-name').value;
+        const digitalSignature = document.getElementById('digital-signature').value;
+        const field = document.getElementById('digital-signature');
+        const errorDiv = document.getElementById('digital-signature-error');
+
+        if (signatoryName && digitalSignature && signatoryName.toLowerCase() !== digitalSignature.toLowerCase()) {
+            showFieldError(field, errorDiv, 'Digital signature must match the signatory name exactly.');
+            return false;
+        }
+
+        clearFieldError(field, errorDiv);
+        return true;
+    }
+
+    // Show field error
+    function showFieldError(field, errorDiv, message) {
+        field.classList.add('error');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    }
+
+    // Clear field error
+    function clearFieldError(field, errorDiv) {
+        field.classList.remove('error');
+        errorDiv.style.display = 'none';
+    }
+
+    // Setup form submission
+    function setupFormSubmission() {
+        document.getElementById('agreement-completion-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            if (emailField) {
-                emailField.addEventListener('blur', function() {
-                    validateWorkEmail(this.value, 'work-email');
-                });
-            }
-
-            if (sigField) {
-                sigField.addEventListener('input', function() {
-                    validateDigitalSignature();
-                });
-            }
-        }
-
-        // Validate work email domain
-        function validateWorkEmail(email, fieldId) {
-            const field = document.getElementById(fieldId);
-            const errorDiv = document.getElementById(fieldId + '-error');
-            
-            if (!email) {
-                return false;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showFieldError(field, errorDiv, 'Please enter a valid email address.');
-                return false;
-            }
-
-            const domain = email.split('@')[1].toLowerCase();
-            if (GENERIC_DOMAINS.includes(domain)) {
-                showFieldError(field, errorDiv, 'Please use your work email address. Generic email providers are not accepted.');
-                return false;
-            }
-
-            if (domain.includes('tempmail') || domain.includes('disposable')) {
-                showFieldError(field, errorDiv, 'Temporary email addresses are not permitted.');
-                return false;
-            }
-
-            clearFieldError(field, errorDiv);
-            return true;
-        }
-
-        // Validate digital signature matches signatory name
-        function validateDigitalSignature() {
-            const signatoryName = document.getElementById('signatory-name').value;
-            const digitalSignature = document.getElementById('digital-signature').value;
-            const field = document.getElementById('digital-signature');
-            const errorDiv = document.getElementById('digital-signature-error');
-
-            if (signatoryName && digitalSignature && signatoryName.toLowerCase() !== digitalSignature.toLowerCase()) {
-                showFieldError(field, errorDiv, 'Digital signature must match the signatory name exactly.');
-                return false;
-            }
-
-            clearFieldError(field, errorDiv);
-            return true;
-        }
-
-        // Show field error
-        function showFieldError(field, errorDiv, message) {
-            field.classList.add('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        // Clear field error
-        function clearFieldError(field, errorDiv) {
-            field.classList.remove('error');
-            errorDiv.style.display = 'none';
-        }
-
-        // Setup form submission
-        function setupFormSubmission() {
-            const form = document.getElementById('agreement-completion-form');
-            if (!form) return;
-            
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                console.log('Form submitted');
-                await validateAndSubmitForm();
-            });
-        }
-
-        // Validate and submit form
-        async function validateAndSubmitForm() {
-            const isValid = validateAllFields();
-            
-            if (!isValid) {
+            if (await validateAndSubmitForm()) {
+                // Form submitted successfully
+            } else {
+                // Validation failed
                 alert('Please correct the errors above and try again.');
-                return false;
             }
+        });
+    }
 
-            // Show loading
-            document.getElementById('form-container').style.display = 'none';
-            document.getElementById('loading-indicator').style.display = 'block';
+    // Validate and submit form
+    async function validateAndSubmitForm() {
+        // Validate all required fields
+        const isValid = validateAllFields();
+        
+        if (!isValid) {
+            return false;
+        }
 
-            try {
-                const formData = collectFormData();
-                console.log('Submitting data to Flow 2...');
-                
-                const response = await submitAgreement(formData);
-                console.log('Flow 2 response:', response);
-                
-                showCompletionSuccess(response);
+        // Show loading indicator
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('loading-indicator').style.display = 'block';
+
+        try {
+            // Collect form data
+            const formData = collectFormData();
+            
+            // Submit to API
+            const response = await submitAgreement(formData);
+            
+            if (response.success) {
+                showCompletionSuccess(response.data);
                 return true;
-            } catch (error) {
-                console.error('Submission error:', error);
-                alert('Failed to submit agreement. Please try again or contact support.\n\nError: ' + error.message);
-                
-                document.getElementById('loading-indicator').style.display = 'none';
-                document.getElementById('form-container').style.display = 'block';
-                return false;
+            } else {
+                throw new Error(response.error || 'Submission failed');
             }
-        }
-
-        // Validate all fields
-        function validateAllFields() {
-            let isValid = true;
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert('Failed to submit agreement. Please try again or contact support.');
             
-            const workEmail = document.getElementById('work-email').value;
-            if (!validateWorkEmail(workEmail, 'work-email')) {
-                isValid = false;
-            }
-            
-            if (!validateDigitalSignature()) {
-                isValid = false;
-            }
-            
-            if (!document.getElementById('terms-agreement').checked) {
-                alert('You must agree to the terms and conditions.');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-
-        // Collect form data
-        function collectFormData() {
-            const form = document.getElementById('agreement-completion-form');
-            const formData = new FormData(form);
-            
-            return {
-                agreementId: agreementId,
-                securityToken: securityToken,
-                companyName: formData.get('companyName') || '',
-                companyType: formData.get('companyType') || '',
-                businessAddress: formData.get('businessAddress') || '',
-                signatoryName: formData.get('signatoryName') || '',
-                signatoryTitle: formData.get('signatoryTitle') || '',
-                workEmail: formData.get('workEmail') || '',
-                phoneNumber: formData.get('phoneNumber') || '',
-                digitalSignature: formData.get('digitalSignature') || '',
-                termsAgreement: true,
-                completionTimestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent
-            };
-        }
-
-        // Submit to Power Automate Flow 2
-        async function submitAgreement(data) {
-            console.log('Posting to:', CONFIG.API_BASE_URL);
-            console.log('Data:', data);
-            
-            const response = await fetch(CONFIG.API_BASE_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-
-            console.log('Response status:', response.status);
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Response error:', errorText);
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            console.log('Parsed response:', result);
-            return result;
-        }
-
-        // Show success
-        function showCompletionSuccess(response) {
+            // Hide loading and show form again
             document.getElementById('loading-indicator').style.display = 'none';
-            document.getElementById('completed-agreement-id').textContent = agreementId;
-            document.getElementById('completion-success').style.display = 'block';
+            document.getElementById('form-container').style.display = 'block';
             
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
         }
-    </script>
+    }
+
+    // Validate all form fields
+    function validateAllFields() {
+        let isValid = true;
+        
+        // Validate work email
+        const workEmail = document.getElementById('work-email').value;
+        if (!validateWorkEmail(workEmail, 'work-email')) {
+            isValid = false;
+        }
+        
+        // Validate digital signature
+        if (!validateDigitalSignature()) {
+            isValid = false;
+        }
+        
+        // Validate terms agreement
+        if (!document.getElementById('terms-agreement').checked) {
+            alert('You must agree to the terms and conditions.');
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+
+    // Collect form data
+    function collectFormData() {
+        const form = document.getElementById('agreement-completion-form');
+        const formData = new FormData(form);
+        
+        const data = {
+            agreementId: agreementId,
+            securityToken: securityToken,
+            companyName: formData.get('companyName'),
+            companyType: formData.get('companyType'),
+            businessAddress: formData.get('businessAddress'),
+            signatoryName: formData.get('signatoryName'),
+            signatoryTitle: formData.get('signatoryTitle'),
+            workEmail: formData.get('workEmail'),
+            phoneNumber: formData.get('phoneNumber'),
+            digitalSignature: formData.get('digitalSignature'),
+            termsAgreement: formData.get('termsAgreement') ? true : false,
+            completionTimestamp: new Date().toISOString(),
+            ipAddress: '',
+            userAgent: navigator.userAgent
+        };
+
+        // Add dynamic fields based on agreement type
+        if (document.getElementById('service-rate')) {
+            data.serviceRate = formData.get('serviceRate');
+            data.serviceDescription = formData.get('serviceDescription');
+        }
+
+        return data;
+    }
+
+    // Submit agreement to API
+    async function submitAgreement(formData) {
+        const response = await fetch(CONFIG.API_BASE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        return await response.json();
+    }
+
+    // Show completion success
+    function showCompletionSuccess(responseData) {
+        document.getElementById('loading-indicator').style.display = 'none';
+        document.getElementById('completed-agreement-id').textContent = agreementId;
+        
+        // Show user's email
+        const userEmail = document.getElementById('work-email').value;
+        document.getElementById('user-email').textContent = userEmail;
+        
+        document.getElementById('completion-success').style.display = 'block';
+        
+        // Scroll to success message
+        document.getElementById('completion-success').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
 </body>
 </html>
