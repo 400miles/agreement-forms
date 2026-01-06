@@ -170,19 +170,6 @@
         margin-bottom: 15px;
     }
 
-    .btn-secondary {
-    background-color: white;
-    color: #2c5aa0;
-    padding: 10px 20px;
-    border: 2px solid #2c5aa0;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin: 5px;
-    display: inline-block;
-    text-decoration: none;
-    transition: all 0.3s;
-}
 
 .btn-secondary:hover {
     background-color: #2c5aa0;
@@ -198,6 +185,8 @@
     }
 }
 </style>
+</head>
+<body>
 
 <div class="agreement-form">
     <div class="agreement-header">
@@ -436,21 +425,12 @@ function prefillFormFields() {
     const prefilledSignatoryTitle = urlParams.get('signatoryTitle');
     const prefilledPhoneNumber = urlParams.get('phoneNumber');
     
-    console.log('Pre-fill data:', {
-        companyName: prefilledCompanyName,
-        contactName: prefilledContactName,
-        contactEmail: prefilledContactEmail,
-        businessAddress: prefilledBusinessAddress,
-        signatoryTitle: prefilledSignatoryTitle,
-        phoneNumber: prefilledPhoneNumber
-    });
     
     // Pre-fill company name
     if (prefilledCompanyName) {
         const companyField = document.getElementById('company-name');
         if (companyField) {
             companyField.value = decodeURIComponent(prefilledCompanyName);
-            console.log('Filled company name:', companyField.value);
         }
     }
     
@@ -459,7 +439,6 @@ function prefillFormFields() {
         const addressField = document.getElementById('business-address');
         if (addressField) {
             addressField.value = decodeURIComponent(prefilledBusinessAddress);
-            console.log('Filled business address:', addressField.value);
         }
     }
     
@@ -468,7 +447,6 @@ function prefillFormFields() {
         const signatoryField = document.getElementById('signatory-name');
         if (signatoryField) {
             signatoryField.value = decodeURIComponent(prefilledContactName);
-            console.log('Filled signatory name:', signatoryField.value);
         }
     }
     
@@ -477,7 +455,6 @@ function prefillFormFields() {
         const titleField = document.getElementById('signatory-title');
         if (titleField) {
             titleField.value = decodeURIComponent(prefilledSignatoryTitle);
-            console.log('Filled signatory title:', titleField.value);
         }
     }
     
@@ -486,7 +463,6 @@ function prefillFormFields() {
         const emailField = document.getElementById('work-email');
         if (emailField) {
             emailField.value = decodeURIComponent(prefilledContactEmail);
-            console.log('Filled email:', emailField.value);
         }
     }
     
@@ -495,7 +471,6 @@ function prefillFormFields() {
         const phoneField = document.getElementById('phone-number');
         if (phoneField) {
             phoneField.value = decodeURIComponent(prefilledPhoneNumber);
-            console.log('Filled phone number:', phoneField.value);
         }
     }
 
@@ -729,20 +704,20 @@ function getEmployeeHubContent() {
 }
 
     // Toggle agreement text view
-function toggleAgreementText(event) {
+function toggleAgreementText() {
     const textDiv = document.getElementById('agreement-text');
-    const button = event.currentTarget; // Use currentTarget for the element with onclick
-        
-        if (textDiv.style.display === 'block') {
-            textDiv.style.display = 'none';
-            button.innerHTML = '<span class="btn-icon">📖</span> Read Full Text';
-        } else {
-            textDiv.style.display = 'block';
-            button.innerHTML = '<span class="btn-icon">📖</span> Collapse Text';
-        }
-        
-        markAgreementAsReviewed();
+    const button = document.querySelector('a[onclick*="toggleAgreementText"]');
+    
+    if (!textDiv || !button) return; // Safety check
+    
+    if (textDiv.style.display === 'block') {
+        textDiv.style.display = 'none';
+        button.innerHTML = 'Read Agreement Terms';
+    } else {
+        textDiv.style.display = 'block';
+        button.innerHTML = 'Collapse Text';
     }
+}
 
     // Show invalid access error
     function showInvalidAccessError() {
