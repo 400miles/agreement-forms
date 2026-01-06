@@ -423,7 +423,7 @@ Continue Intake Process
         prefillFormFields();
     }
 
-    // Pre-fill form fields from URL parameters
+
     // Pre-fill form fields from URL parameters
 function prefillFormFields() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -523,10 +523,12 @@ function loadAgreementText(type) {
             container.innerHTML = getNDAContent();
     }
 
-        // Open by default
-    textDiv.style.display = 'block';
-    document.getElementById('review-confirmation').style.display = 'block';
-    document.getElementById('must-review-notice').style.display = 'none';
+    // Open by default and update button text
+    container.style.display = 'block';
+    const toggleButton = document.querySelector('a[onclick*="toggleAgreementText"]');
+    if (toggleButton) {
+        toggleButton.innerHTML = '📖 Collapse Text';
+    }
 }
 
     // NDA Agreement Content
@@ -727,9 +729,9 @@ function getEmployeeHubContent() {
 }
 
     // Toggle agreement text view
-    function toggleAgreementText() {
-        const textDiv = document.getElementById('agreement-text');
-        const button = event.target; // Get the button that was clicked
+function toggleAgreementText(event) {
+    const textDiv = document.getElementById('agreement-text');
+    const button = event.currentTarget; // Use currentTarget for the element with onclick
         
         if (textDiv.style.display === 'block') {
             textDiv.style.display = 'none';
