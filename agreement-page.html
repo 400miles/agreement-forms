@@ -169,17 +169,44 @@
         color: #2e7d32;
         margin-bottom: 15px;
     }
+
+    .btn-secondary {
+    background-color: white;
+    color: #2c5aa0;
+    padding: 10px 20px;
+    border: 2px solid #2c5aa0;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 5px;
+    display: inline-block;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #2c5aa0;
+    color: white;
+}
+
+/* Mobile: Make buttons stack vertically */
+@media (max-width: 768px) {
+    .btn-secondary {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+    }
+}
 </style>
 
 <div class="agreement-form">
     <div class="agreement-header">
-        <h1>Agreement Completion</h1>
+        <h1>Step 2: Review & Sign Agreement</h1>
         <div class="agreement-id" id="agreement-id-display">
-            Loading Agreement ID...
+            AGR-2025-1017-0042
         </div>
-        <p>Please complete the following information to finalize your agreement.</p>
+        <p>Please review the agreement below and complete your information to proceed.</p>
     </div>
-
     <div id="form-container">
         <!-- Agreement Review Section -->
         <div class="form-section" style="background: #fafafa;">
@@ -495,6 +522,11 @@ function loadAgreementText(type) {
         default:
             container.innerHTML = getNDAContent();
     }
+
+        // Open by default
+    textDiv.style.display = 'block';
+    document.getElementById('review-confirmation').style.display = 'block';
+    document.getElementById('must-review-notice').style.display = 'none';
 }
 
     // NDA Agreement Content
@@ -697,13 +729,17 @@ function getEmployeeHubContent() {
     // Toggle agreement text view
     function toggleAgreementText() {
         const textDiv = document.getElementById('agreement-text');
+        const button = event.target; // Get the button that was clicked
         
-        if (textDiv.style.display === 'none') {
-            textDiv.style.display = 'block';
-            textDiv.scrollTop = 0;
-        } else {
+        if (textDiv.style.display === 'block') {
             textDiv.style.display = 'none';
+            button.innerHTML = '<span class="btn-icon">📖</span> Read Full Text';
+        } else {
+            textDiv.style.display = 'block';
+            button.innerHTML = '<span class="btn-icon">📖</span> Collapse Text';
         }
+        
+        markAgreementAsReviewed();
     }
 
     // Show invalid access error
@@ -951,19 +987,30 @@ function getEmployeeHubContent() {
     }
 
     // Show completion success
-    function showCompletionSuccess(responseData) {
-        document.getElementById('loading-indicator').style.display = 'none';
-        document.getElementById('completed-agreement-id').textContent = agreementId;
-        
-        // Show user's email
-        const userEmail = document.getElementById('work-email').value;
-        document.getElementById('user-email').textContent = userEmail;
-        
-        document.getElementById('completion-success').style.display = 'block';
-        
-        // Scroll to success message
-        document.getElementById('completion-success').scrollIntoView({ behavior: 'smooth' });
-    }
+function showCompletionSuccess() {
+    document.getElementById('loading-indicator').style.display = 'none';
+    document.getElementById('completed-agreement-id').textContent = agreementId;
+    
+    // Gray out form instead of hiding
+    document.getElementById('form-container').style.opacity = '0.5';
+    document.getElementById('form-container').style.pointerEvents = 'none';
+    
+    // Success message
+    document.getElementById('completion-success').innerHTML = `
+        <h2>✓ Agreement Signed Successfully</h2>
+        <p><strong>Agreement ID:</strong> ${agreementId}</p>
+        <p>Thank you for signing the agreement!</p>
+        <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; text-align: left;">
+            <strong>📋 Next Step:</strong> You will receive an email shortly with a link to complete your innovation request intake form.
+        </div>
+        <p style="font-size: 14px; color: #666;">
+            Questions? Contact innovation@t-mobile.com
+        </p>
+    `;
+    
+    document.getElementById('completion-success').style.display = 'block';
+    document.getElementById('completion-success').scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
