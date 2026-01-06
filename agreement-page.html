@@ -170,20 +170,14 @@
         margin-bottom: 15px;
     }
 
-
-.btn-secondary:hover {
-    background-color: #2c5aa0;
-    color: white;
-}
-
-/* Mobile: Make buttons stack vertically */
-@media (max-width: 768px) {
-    .btn-secondary {
-        display: block;
-        width: 100%;
-        margin: 5px 0;
+    /* Mobile: Make buttons stack vertically */
+    @media (max-width: 768px) {
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+        }
     }
-}
 </style>
 </head>
 <body>
@@ -205,9 +199,7 @@
             </div>
 
             <div style="text-align: center; margin: 15px 0;">
-                <a href="#" class="btn-secondary" onclick="toggleAgreementText(); return false;">
-                    📖 Read Agreement Terms
-                </a>
+                <button type="button" id="toggle-agreement-btn" class="btn-secondary" onclick="toggleAgreementText()">📖 Read Agreement Terms</button>
             </div>
 
             <!-- HTML Agreement Text - Populated Dynamically -->
@@ -226,21 +218,6 @@
                     <input type="text" id="company-name" name="companyName" class="form-control" required>
                     <div class="error-message" id="company-name-error"></div>
                 </div>
-                
-                <!--<div class="form-group">
-                    <label for="company-type">Company Type</label>
-                    <select id="company-type" name="companyType" class="form-control">
-                        <option value="">Select company type (optional)</option>
-                        <option value="Corporation">Corporation</option>
-                        <option value="LLC">LLC</option>
-                        <option value="Partnership">Partnership</option>
-                        <option value="Sole Proprietorship">Sole Proprietorship</option>
-                        <option value="Non-Profit">Non-Profit</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <div class="error-message" id="company-type-error"></div>
-                </div>
-            -->
                 
                 <div class="form-group">
                     <label for="business-address">Business Address <span class="required">*</span></label>
@@ -482,7 +459,9 @@ function prefillFormFields() {
     // Load agreement text based on type
 function loadAgreementText(type) {
     const container = document.getElementById('agreement-text');
+    const button = document.getElementById('toggle-agreement-btn');
     
+    // Load content based on type
     switch(type) {
         case 'NDA':
         case 'Mutual NDA':
@@ -498,11 +477,12 @@ function loadAgreementText(type) {
             container.innerHTML = getNDAContent();
     }
 
-    // Open by default and update button text
+    // Open by default
     container.style.display = 'block';
-    const toggleButton = document.getElementById('toggle-agreement-btn');
-    if (toggleButton) {
-        toggleButton.innerHTML = '📖 Collapse Text';
+    
+    // Update button text to reflect open state
+    if (button) {
+        button.textContent = '📖 Collapse Text';
     }
 }
 
@@ -713,10 +693,10 @@ function toggleAgreementText() {
     
     if (textDiv.style.display === 'block') {
         textDiv.style.display = 'none';
-        button.innerHTML = '📖 Read Agreement Terms';
+        button.textContent = '📖 Read Agreement Terms';
     } else {
         textDiv.style.display = 'block';
-        button.innerHTML = '📖 Collapse Text';
+        button.textContent = '📖 Collapse Text';
     }
 }
 
@@ -966,26 +946,29 @@ function toggleAgreementText() {
 
     // Show completion success
 function showCompletionSuccess() {
+    // Get user email before any DOM manipulation
+    const userEmail = document.getElementById('work-email').value;
+    
+    // Hide loading
     document.getElementById('loading-indicator').style.display = 'none';
+    
+    // Show form but make it read-only and grayed out
+    const formContainer = document.getElementById('form-container');
+    formContainer.style.display = 'block';
+    formContainer.style.opacity = '0.5';
+    formContainer.style.pointerEvents = 'none';
+    
+    // Disable all form inputs and buttons
+    const formElements = document.querySelectorAll('#agreement-completion-form input, #agreement-completion-form textarea, #agreement-completion-form select, #agreement-completion-form button, #toggle-agreement-btn');
+    formElements.forEach(element => {
+        element.disabled = true;
+    });
+    
+    // Update success message
     document.getElementById('completed-agreement-id').textContent = agreementId;
+    document.getElementById('user-email').textContent = userEmail;
     
-    // Gray out form instead of hiding
-    document.getElementById('form-container').style.opacity = '0.5';
-    document.getElementById('form-container').style.pointerEvents = 'none';
-    
-    // Success message
-    document.getElementById('completion-success').innerHTML = `
-        <h2>✓ Agreement Signed Successfully</h2>
-        <p><strong>Agreement ID:</strong> ${agreementId}</p>
-        <p>Thank you for signing the agreement!</p>
-        <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; text-align: left;">
-            <strong>📋 Next Step:</strong> You will receive an email shortly with a link to complete your innovation request intake form.
-        </div>
-        <p style="font-size: 14px; color: #666;">
-            Questions? Contact innovation@t-mobile.com
-        </p>
-    `;
-    
+    // Show success message
     document.getElementById('completion-success').style.display = 'block';
     document.getElementById('completion-success').scrollIntoView({ behavior: 'smooth' });
 }
