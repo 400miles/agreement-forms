@@ -500,7 +500,7 @@ function loadAgreementText(type) {
 
     // Open by default and update button text
     container.style.display = 'block';
-    const toggleButton = document.querySelector('a[onclick*="toggleAgreementText"]');
+    const toggleButton = document.getElementById('toggle-agreement-btn');
     if (toggleButton) {
         toggleButton.innerHTML = '📖 Collapse Text';
     }
@@ -703,19 +703,20 @@ function getEmployeeHubContent() {
     `;
 }
 
-    // Toggle agreement text view
+
+// Toggle agreement text view
 function toggleAgreementText() {
     const textDiv = document.getElementById('agreement-text');
-    const button = document.querySelector('a[onclick*="toggleAgreementText"]');
+    const button = document.getElementById('toggle-agreement-btn');
     
     if (!textDiv || !button) return; // Safety check
     
     if (textDiv.style.display === 'block') {
         textDiv.style.display = 'none';
-        button.innerHTML = 'Read Agreement Terms';
+        button.innerHTML = '📖 Read Agreement Terms';
     } else {
         textDiv.style.display = 'block';
-        button.innerHTML = 'Collapse Text';
+        button.innerHTML = '📖 Collapse Text';
     }
 }
 
