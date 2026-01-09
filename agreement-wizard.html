@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Mobile Innovation Hub - Agreement Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .wizard-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .wizard-header {
+            background: #2c5aa0;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .wizard-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .wizard-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Employee Context Banner */
+        .employee-context {
+            display: none;
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 16px 20px;
+            margin: 20px 20px 0;
+            border-radius: 4px;
+        }
+
+        .employee-context.show {
+            display: block;
+        }
+
+        .employee-context p {
+            font-size: 14px;
+            color: #1565c0;
+            margin-bottom: 4px;
+        }
+
+        .employee-context strong {
+            color: #0d47a1;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            display: flex;
+            padding: 30px 20px 20px;
+            gap: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+
+        .progress-step.active {
+            background: #2c5aa0;
+        }
+
+        .progress-step.completed {
+            background: #4caf50;
+        }
+
+        /* Step Labels */
+        .step-labels {
+            display: flex;
+            padding: 0 20px 20px;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .step-labels .step-label {
+            flex: 1;
+            text-align: center;
+        }
+
+        .step-labels .step-label.active {
+            color: #2c5aa0;
+            font-weight: 600;
+        }
+
+        /* Wizard Content */
+        .wizard-content {
+            padding: 20px;
+        }
+
+        .wizard-step {
+            display: none;
+        }
+
+        .wizard-step.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+
+        .form-control:read-only {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .form-control.error {
+            border-color: #d32f2f;
+        }
+
+        .error-message {
+            display: none;
+            color: #d32f2f;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Email Verification */
+        .verification-code-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .verification-code-input {
+            width: 50px;
+            height: 56px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .verification-code-input:focus {
+            border-color: #2c5aa0;
+        }
+
+        .resend-code {
+            color: #2c5aa0;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .resend-code:hover {
+            text-decoration: underline;
+        }
+
+        /* Agreement Text */
+        .agreement-text {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .agreement-text h3 {
+            font-size: 16px;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .agreement-text h3:first-child {
+            margin-top: 0;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* Buttons */
+        .wizard-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #1e3d6f;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2c5aa0;
+            border: 2px solid #2c5aa0;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2c5aa0;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success Screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-screen.show {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #4caf50;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .wizard-container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .wizard-header h1 {
+                font-size: 20px;
+            }
+
+            .step-labels {
+                font-size: 10px;
+            }
+
+            .verification-code-input {
+                width: 45px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wizard-container">
+        <!-- Header -->
+        <div class="wizard-header">
+            <h1>T-Mobile Innovation Hub</h1>
+            <p>Agreement Form</p>
+        </div>
+
+        <!-- Employee Context (shown only for employee-initiated) -->
+        <div class="employee-context" id="employee-context">
+            <p><strong>Agreement ID:</strong> <span id="context-agreement-id"></span></p>
+            <p><strong>Initiated by:</strong> <span id="context-employee"></span></p>
+            <p><strong>Type:</strong> <span id="context-type"></span></p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progress-bar">
+            <!-- Generated dynamically based on path -->
+        </div>
+
+        <!-- Step Labels -->
+        <div class="step-labels" id="step-labels">
+            <!-- Generated dynamically based on path -->
+        </div>
+
+        <!-- Wizard Content -->
+        <div class="wizard-content">
+            <!-- STEP 1: Email Verification (Self-Service Only) -->
+            <div class="wizard-step" id="step-verify-email">
+                <h2 class="step-title">Verify Your Email</h2>
+                <p class="step-description">We'll send a verification code to your work email address.</p>
+
+                <div class="form-group">
+                    <label for="work-email">Work Email Address <span class="required">*</span></label>
+                    <input type="email" id="work-email" class="form-control" placeholder="you@company.com">
+                    <div class="error-message" id="work-email-error"></div>
+                    <div class="helper-text">Generic email addresses (Gmail, Yahoo, etc.) are not accepted</div>
+                </div>
+
+                <button class="btn btn-primary" id="btn-send-code" style="width: 100%;">Send Verification Code</button>
+            </div>
+
+            <!-- STEP 2: Enter Verification Code (Self-Service Only) -->
+            <div class="wizard-step" id="step-enter-code">
+                <h2 class="step-title">Enter Verification Code</h2>
+                <p class="step-description">We sent a 6-digit code to <strong id="verification-email"></strong></p>
+
+                <div class="verification-code-container">
+                    <input type="text" maxlength="1" class="verification-code-input" data-index="0">
+                    <input type="text" maxlength="1" class="verification-code-input" data-index="1">
+                    <input type="text" maxlength="1" class="verification-code-input" data-index="2">
+                    <input type="text" maxlength="1" class="verification-code-input" data-index="3">
+                    <input type="text" maxlength="1" class="verification-code-input" data-index="4">
+                    <input type="text" maxlength="1" class="verification-code-input" data-index="5">
+                </div>
+
+                <div class="error-message" id="code-error"></div>
+
+                <a href="#" class="resend-code" id="resend-code">Didn't receive it? Send again</a>
+
+                <button class="btn btn-primary" id="btn-verify-code" style="width: 100%; margin-top: 16px;">Verify Code</button>
+            </div>
+
+            <!-- STEP 3: Company Information -->
+            <div class="wizard-step" id="step-company-info">
+                <h2 class="step-title">Company Information</h2>
+                <p class="step-description">Tell us about your organization.</p>
+
+                <div class="form-group">
+                    <label for="company-name">Legal Company Name <span class="required">*</span></label>
+                    <input type="text" id="company-name" class="form-control" placeholder="Acme Corporation">
+                    <div class="error-message" id="company-name-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="company-type">Company Type</label>
+                    <select id="company-type" class="form-control">
+                        <option value="">Select (optional)</option>
+                        <option value="Corporation">Corporation</option>
+                        <option value="LLC">LLC</option>
+                        <option value="Partnership">Partnership</option>
+                        <option value="Sole Proprietorship">Sole Proprietorship</option>
+                        <option value="Non-Profit">Non-Profit</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="business-address">Business Address <span class="required">*</span></label>
+                    <textarea id="business-address" class="form-control" rows="3" placeholder="123 Main St, Suite 100&#10;City, State 12345"></textarea>
+                    <div class="error-message" id="business-address-error"></div>
+                </div>
+            </div>
+
+            <!-- STEP 4: Representative Information -->
+            <div class="wizard-step" id="step-representative">
+                <h2 class="step-title">Authorized Representative</h2>
+                <p class="step-description">Who is authorized to sign this agreement?</p>
+
+                <div class="form-group">
+                    <label for="signatory-name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="signatory-name" class="form-control" placeholder="Jane Smith">
+                    <div class="error-message" id="signatory-name-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signatory-title">Title/Position <span class="required">*</span></label>
+                    <input type="text" id="signatory-title" class="form-control" placeholder="CEO">
+                    <div class="error-message" id="signatory-title-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signatory-email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="signatory-email" class="form-control" placeholder="jane@company.com">
+                    <div class="error-message" id="signatory-email-error"></div>
+                    <div class="helper-text">Must match the verified email</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone-number">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phone-number" class="form-control" placeholder="+1 (555) 123-4567">
+                    <div class="error-message" id="phone-number-error"></div>
+                </div>
+            </div>
+
+            <!-- STEP 5: Review Agreement -->
+            <div class="wizard-step" id="step-review">
+                <h2 class="step-title">Review Agreement</h2>
+                <p class="step-description">Please read the full agreement before signing.</p>
+
+                <div class="agreement-text" id="agreement-text">
+                    <h3>MUTUAL NON-DISCLOSURE AGREEMENT</h3>
+                    <p><strong>Effective Date:</strong> Upon execution by all parties</p>
+
+                    <h3>1. PARTIES</h3>
+                    <p>This Agreement is entered into between T-Mobile Innovation Hub ("Company") and the organization completing this form ("Counterparty").</p>
+
+                    <h3>2. PURPOSE</h3>
+                    <p>The parties wish to explore a potential business relationship and may need to disclose confidential information to each other.</p>
+
+                    <h3>3. CONFIDENTIAL INFORMATION</h3>
+                    <p>Confidential Information includes all non-public information disclosed by either party, whether oral, written, or electronic.</p>
+
+                    <h3>4. OBLIGATIONS</h3>
+                    <p>Each party agrees to:</p>
+                    <ul>
+                        <li>Maintain confidentiality of all disclosed information</li>
+                        <li>Use information only for the intended purpose</li>
+                        <li>Limit access to those with need-to-know</li>
+                        <li>Protect information with reasonable security measures</li>
+                    </ul>
+
+                    <h3>5. TERM</h3>
+                    <p>This Agreement remains in effect for two (2) years from the Effective Date.</p>
+
+                    <h3>6. RETURN OF INFORMATION</h3>
+                    <p>Upon request, each party shall return or destroy all Confidential Information received.</p>
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" id="terms-agreement">
+                    <label for="terms-agreement">I have read and agree to the terms above <span class="required">*</span></label>
+                </div>
+            </div>
+
+            <!-- STEP 6: Digital Signature -->
+            <div class="wizard-step" id="step-signature">
+                <h2 class="step-title">Digital Signature</h2>
+                <p class="step-description">Type your full name to sign this agreement.</p>
+
+                <div class="form-group">
+                    <label for="digital-signature">Your Full Name <span class="required">*</span></label>
+                    <input type="text" id="digital-signature" class="form-control" placeholder="Type your name exactly as it appears above">
+                    <div class="error-message" id="digital-signature-error"></div>
+                    <div class="helper-text">Must match the signatory name exactly</div>
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" id="signature-confirmation">
+                    <label for="signature-confirmation">I confirm that I am authorized to sign on behalf of my organization <span class="required">*</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="wizard-buttons">
+            <button class="btn btn-secondary" id="btn-back" style="display: none;">Back</button>
+            <button class="btn btn-primary" id="btn-next">Next</button>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="success-screen" id="success-screen">
+            <div class="success-icon">✓</div>
+            <h2 style="margin-bottom: 16px;">Agreement Submitted!</h2>
+            <p style="color: #666; margin-bottom: 24px;">
+                Thank you for completing the agreement. You'll receive a confirmation email shortly.
+            </p>
+            <p style="font-size: 14px; color: #666;">
+                Redirecting you to the next step...
+            </p>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loading-message">Processing...</p>
+        </div>
+    </div>
+
+    <script>
+        // ═════════════════════════════════════════════════
+        // CONFIGURATION
+        // ═════════════════════════════════════════════════
+
+        const CONFIG = {
+            API_SEND_CODE: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4341c3c423ad4186bbbcbf6ec0f54b93/triggers/manual/paths/invoke?api-version=1',
+            API_VERIFY_CODE: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/199a3ec089864a5ea6d8006c1a270a2e/triggers/manual/paths/invoke?api-version=1',
+            API_VALIDATE_TOKEN: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a60671f8d38444a09e3ac09442b80964/triggers/manual/paths/invoke?api-version=1',
+            API_SUBMIT: 'https://7eb27a1e3f99e66a8ae45a9d8ca269.15.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f22ee6457eb84ca3a32e3f970a3150be/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sCEtdfiLOS_Ull_JD6DG12B23XJinjCk77mXDy8qUIA',
+            BRAINEET_URL: 'https://t-innovate.braineet.com/en/g/external/form?braineeTypeUrl=ext-intake-requests',
+            GENERIC_DOMAINS: ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com']
+        };
+
+        // ═════════════════════════════════════════════════
+        // STATE
+        // ═════════════════════════════════════════════════
+
+        let state = {
+            currentStep: 0,
+            steps: [],
+            formMode: null, // 'create' or 'update'
+            agreementData: null,
+            verifiedEmail: null
+        };
+
+        // ═════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═════════════════════════════════════════════════
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (token) {
+                await initEmployeeInitiatedPath(token);
+            } else {
+                await initSelfServicePath();
+            }
+
+            setupEventListeners();
+        });
+
+        // ═════════════════════════════════════════════════
+        // PATH INITIALIZATION
+        // ═════════════════════════════════════════════════
+
+        async function initSelfServicePath() {
+            state.formMode = 'create';
+            state.steps = [
+                'step-verify-email',
+                'step-enter-code',
+                'step-company-info',
+                'step-representative',
+                'step-review',
+                'step-signature'
+            ];
+
+            setupProgressBar([
+                'Verify Email',
+                'Enter Code',
+                'Company Info',
+                'Representative',
+                'Review',
+                'Sign'
+            ]);
+
+            showStep(0);
+        }
+
+        async function initEmployeeInitiatedPath(token) {
+            showLoading('Validating secure link...');
+
+            try {
+                const response = await fetch(CONFIG.API_VALIDATE_TOKEN, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({token})
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.valid) {
+                    hideLoading();
+                    showError('Invalid or expired link. Please contact the sender for a new link.');
+                    return;
+                }
+
+                hideLoading();
+
+                // Setup employee-initiated mode
+                state.formMode = 'update';
+                state.agreementData = data.agreementData;
+                state.verifiedEmail = data.agreementData.thirdPartyEmail;
+
+                // Show employee context
+                document.getElementById('employee-context').classList.add('show');
+                document.getElementById('context-agreement-id').textContent = data.agreementData.agreementId;
+                document.getElementById('context-employee').textContent = data.agreementData.initiatingEmployee;
+                document.getElementById('context-type').textContent = data.agreementData.agreementType;
+
+                // Skip email verification steps
+                state.steps = [
+                    'step-company-info',
+                    'step-representative',
+                    'step-review',
+                    'step-signature'
+                ];
+
+                setupProgressBar([
+                    'Company Info',
+                    'Representative',
+                    'Review',
+                    'Sign'
+                ]);
+
+                // Pre-fill form
+                preFillForm(data.agreementData);
+
+                showStep(0);
+
+            } catch (error) {
+                hideLoading();
+                showError('Failed to load agreement. Please try again.');
+                console.error(error);
+            }
+        }
+
+        function preFillForm(data) {
+            if (data.thirdPartyCompany) {
+                document.getElementById('company-name').value = data.thirdPartyCompany;
+            }
+            
+            document.getElementById('signatory-email').value = data.thirdPartyEmail;
+            document.getElementById('signatory-email').readOnly = true;
+        }
+
+        // ═════════════════════════════════════════════════
+        // PROGRESS BAR
+        // ═════════════════════════════════════════════════
+
+        function setupProgressBar(labels) {
+            const progressBar = document.getElementById('progress-bar');
+            const stepLabels = document.getElementById('step-labels');
+
+            progressBar.innerHTML = labels.map(() => 
+                '<div class="progress-step"></div>'
+            ).join('');
+
+            stepLabels.innerHTML = labels.map(label => 
+                `<div class="step-label">${label}</div>`
+            ).join('');
+        }
+
+        function updateProgressBar() {
+            const steps = document.querySelectorAll('.progress-step');
+            const labels = document.querySelectorAll('.step-label');
+
+            steps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                labels[index].classList.remove('active');
+
+                if (index < state.currentStep) {
+                    step.classList.add('completed');
+                } else if (index === state.currentStep) {
+                    step.classList.add('active');
+                    labels[index].classList.add('active');
+                }
+            });
+        }
+
+        // ═════════════════════════════════════════════════
+        // STEP NAVIGATION
+        // ═════════════════════════════════════════════════
+
+        function showStep(stepIndex) {
+            // Hide all steps
+            document.querySelectorAll('.wizard-step').forEach(step => {
+                step.classList.remove('active');
+            });
+
+            // Show current step
+            const stepId = state.steps[stepIndex];
+            document.getElementById(stepId).classList.add('active');
+
+            state.currentStep = stepIndex;
+            updateProgressBar();
+
+            // Update buttons
+            const btnBack = document.getElementById('btn-back');
+            const btnNext = document.getElementById('btn-next');
+
+            btnBack.style.display = stepIndex > 0 ? 'block' : 'none';
+            btnNext.textContent = stepIndex === state.steps.length - 1 ? 'Submit' : 'Next';
+        }
+
+        async function nextStep() {
+            const currentStepId = state.steps[state.currentStep];
+
+            // Validate current step
+            if (!await validateStep(currentStepId)) {
+                return;
+            }
+
+            // Last step - submit
+            if (state.currentStep === state.steps.length - 1) {
+                await submitForm();
+                return;
+            }
+
+            // Move to next step
+            showStep(state.currentStep + 1);
+        }
+
+        function previousStep() {
+            if (state.currentStep > 0) {
+                showStep(state.currentStep - 1);
+            }
+        }
+
+        // ═════════════════════════════════════════════════
+        // VALIDATION
+        // ═════════════════════════════════════════════════
+
+        async function validateStep(stepId) {
+            switch(stepId) {
+                case 'step-verify-email':
+                    return await validateAndSendCode();
+                case 'step-enter-code':
+                    return await validateCode();
+                case 'step-company-info':
+                    return validateCompanyInfo();
+                case 'step-representative':
+                    return validateRepresentative();
+                case 'step-review':
+                    return validateReview();
+                case 'step-signature':
+                    return validateSignature();
+                default:
+                    return true;
+            }
+        }
+
+        async function validateAndSendCode() {
+            const email = document.getElementById('work-email').value.trim();
+            
+            if (!email) {
+                showFieldError('work-email', 'Email is required');
+                return false;
+            }
+
+            if (!isValidEmail(email)) {
+                showFieldError('work-email', 'Please enter a valid email address');
+                return false;
+            }
+
+            if (isGenericDomain(email)) {
+                showFieldError('work-email', 'Please use your work email address. Generic email providers are not accepted.');
+                return false;
+            }
+
+            clearFieldError('work-email');
+
+            // Send verification code
+            showLoading('Sending verification code...');
+
+            try {
+                const response = await fetch(CONFIG.API_SEND_CODE, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email})
+                });
+
+                hideLoading();
+
+                if (!response.ok) {
+                    throw new Error('Failed to send code');
+                }
+
+                state.verifiedEmail = email;
+                document.getElementById('verification-email').textContent = email;
+                return true;
+
+            } catch (error) {
+                hideLoading();
+                showFieldError('work-email', 'Failed to send verification code. Please try again.');
+                return false;
+            }
+        }
+
+        async function validateCode() {
+            const inputs = document.querySelectorAll('.verification-code-input');
+            const code = Array.from(inputs).map(input => input.value).join('');
+
+            if (code.length !== 6) {
+                showFieldError('code', 'Please enter the complete 6-digit code');
+                return false;
+            }
+
+            showLoading('Verifying code...');
+
+            try {
+                const response = await fetch(CONFIG.API_VERIFY_CODE, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: state.verifiedEmail,
+                        code
+                    })
+                });
+
+                const data = await response.json();
+                hideLoading();
+
+                if (!data.valid) {
+                    showFieldError('code', 'Invalid or expired code. Please try again.');
+                    return false;
+                }
+
+                clearFieldError('code');
+                return true;
+
+            } catch (error) {
+                hideLoading();
+                showFieldError('code', 'Failed to verify code. Please try again.');
+                return false;
+            }
+        }
+
+        function validateCompanyInfo() {
+            let valid = true;
+
+            const companyName = document.getElementById('company-name').value.trim();
+            if (!companyName) {
+                showFieldError('company-name', 'Company name is required');
+                valid = false;
+            } else {
+                clearFieldError('company-name');
+            }
+
+            const businessAddress = document.getElementById('business-address').value.trim();
+            if (!businessAddress) {
+                showFieldError('business-address', 'Business address is required');
+                valid = false;
+            } else {
+                clearFieldError('business-address');
+            }
+
+            return valid;
+        }
+
+        function validateRepresentative() {
+            let valid = true;
+
+            const signatoryName = document.getElementById('signatory-name').value.trim();
+            if (!signatoryName) {
+                showFieldError('signatory-name', 'Name is required');
+                valid = false;
+            } else {
+                clearFieldError('signatory-name');
+            }
+
+            const signatoryTitle = document.getElementById('signatory-title').value.trim();
+            if (!signatoryTitle) {
+                showFieldError('signatory-title', 'Title is required');
+                valid = false;
+            } else {
+                clearFieldError('signatory-title');
+            }
+
+            const signatoryEmail = document.getElementById('signatory-email').value.trim();
+            if (!signatoryEmail) {
+                showFieldError('signatory-email', 'Email is required');
+                valid = false;
+            } else if (state.formMode === 'create' && signatoryEmail !== state.verifiedEmail) {
+                showFieldError('signatory-email', 'Email must match the verified email');
+                valid = false;
+            } else {
+                clearFieldError('signatory-email');
+            }
+
+            const phoneNumber = document.getElementById('phone-number').value.trim();
+            if (!phoneNumber) {
+                showFieldError('phone-number', 'Phone number is required');
+                valid = false;
+            } else {
+                clearFieldError('phone-number');
+            }
+
+            return valid;
+        }
+
+        function validateReview() {
+            const termsAgreed = document.getElementById('terms-agreement').checked;
+            if (!termsAgreed) {
+                alert('Please read and agree to the terms before continuing.');
+                return false;
+            }
+            return true;
+        }
+
+        function validateSignature() {
+            const signature = document.getElementById('digital-signature').value.trim();
+            const signatoryName = document.getElementById('signatory-name').value.trim();
+            const confirmed = document.getElementById('signature-confirmation').checked;
+
+            if (!signature) {
+                showFieldError('digital-signature', 'Digital signature is required');
+                return false;
+            }
+
+            if (signature.toLowerCase() !== signatoryName.toLowerCase()) {
+                showFieldError('digital-signature', 'Signature must match signatory name exactly');
+                return false;
+            }
+
+            if (!confirmed) {
+                alert('Please confirm you are authorized to sign.');
+                return false;
+            }
+
+            clearFieldError('digital-signature');
+            return true;
+        }
+
+        // ═════════════════════════════════════════════════
+        // FORM SUBMISSION
+        // ═════════════════════════════════════════════════
+
+        async function submitForm() {
+            showLoading('Submitting agreement...');
+
+            const formData = {
+                mode: state.formMode,
+                agreementId: state.agreementData?.agreementId || null,
+                companyName: document.getElementById('company-name').value.trim(),
+                companyType: document.getElementById('company-type').value,
+                businessAddress: document.getElementById('business-address').value.trim(),
+                signatoryName: document.getElementById('signatory-name').value.trim(),
+                signatoryTitle: document.getElementById('signatory-title').value.trim(),
+                signatoryEmail: document.getElementById('signatory-email').value.trim(),
+                phoneNumber: document.getElementById('phone-number').value.trim(),
+                digitalSignature: document.getElementById('digital-signature').value.trim(),
+                submittedAt: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(CONFIG.API_SUBMIT, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                hideLoading();
+
+                if (!data.success) {
+                    throw new Error(data.message || 'Submission failed');
+                }
+
+                // Show success screen
+                document.querySelector('.wizard-content').style.display = 'none';
+                document.querySelector('.wizard-buttons').style.display = 'none';
+                document.getElementById('success-screen').classList.add('show');
+
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = `${CONFIG.BRAINEET_URL}?email=${encodeURIComponent(formData.signatoryEmail)}`;
+                }, 3000);
+
+            } catch (error) {
+                hideLoading();
+                alert('Failed to submit agreement. Please try again or contact support.');
+                console.error(error);
+            }
+        }
+
+        // ═════════════════════════════════════════════════
+        // EVENT LISTENERS
+        // ═════════════════════════════════════════════════
+
+        function setupEventListeners() {
+            document.getElementById('btn-next').addEventListener('click', nextStep);
+            document.getElementById('btn-back').addEventListener('click', previousStep);
+
+            // Verification code auto-focus
+            const codeInputs = document.querySelectorAll('.verification-code-input');
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value && index < codeInputs.length - 1) {
+                        codeInputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+            });
+
+            // Resend code
+            document.getElementById('resend-code').addEventListener('click', async (e) => {
+                e.preventDefault();
+                showStep(0); // Go back to email entry
+            });
+        }
+
+        // ═════════════════════════════════════════════════
+        // UTILITY FUNCTIONS
+        // ═════════════════════════════════════════════════
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function isGenericDomain(email) {
+            const domain = email.split('@')[1]?.toLowerCase();
+            return CONFIG.GENERIC_DOMAINS.includes(domain);
+        }
+
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.getElementById(`${fieldId}-error`);
+            
+            if (field) field.classList.add('error');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.classList.add('show');
+            }
+        }
+
+        function clearFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.getElementById(`${fieldId}-error`);
+            
+            if (field) field.classList.remove('error');
+            if (errorDiv) {
+                errorDiv.classList.remove('show');
+            }
+        }
+
+        function showLoading(message) {
+            document.getElementById('loading-message').textContent = message;
+            document.getElementById('loading-overlay').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+
+        function showError(message) {
+            alert(message);
+        }
+    </script>
+</body>
+</html>
