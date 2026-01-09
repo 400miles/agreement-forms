@@ -656,11 +656,12 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
+            const email = urlParams.get('email');
 
             if (token) {
                 await initEmployeeInitiatedPath(token);
             } else {
-                await initSelfServicePath();
+                await initSelfServicePath(email);
             }
 
             setupEventListeners();
@@ -670,7 +671,7 @@
         // PATH INITIALIZATION
         // ═════════════════════════════════════════════════
 
-        async function initSelfServicePath() {
+        async function initSelfServicePath(prefilledEmail = null) {
             state.formMode = 'create';
             state.steps = [
                 'step-verify-email',
@@ -690,8 +691,13 @@
                 'Sign'
             ]);
 
-            showStep(0);
-        }
+    // Pre-fill email if provided
+    if (prefilledEmail) {
+        document.getElementById('work-email').value = decodeURIComponent(prefilledEmail);
+    }
+
+    showStep(0);
+}
 
         async function initEmployeeInitiatedPath(token) {
             showLoading('Validating secure link...');
